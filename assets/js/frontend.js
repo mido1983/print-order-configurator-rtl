@@ -57,6 +57,7 @@
 
 		if (form) {
 			form.enctype = 'multipart/form-data';
+			form.classList.add('poc-rtl-cart-form');
 		}
 	});
 }());

@@ -69,7 +69,10 @@ final class POC_RTL_Frontend {
 		?>
 		<section class="poc-rtl-configurator" dir="<?php echo esc_attr( $dir ); ?>" lang="<?php echo esc_attr( $lang ); ?>" aria-labelledby="poc-rtl-title">
 			<?php wp_nonce_field( 'poc_rtl_add_to_cart', 'poc_rtl_nonce' ); ?>
-			<h2 id="poc-rtl-title" class="poc-rtl-title"><?php echo poc_rtl_esc_html( 'פרטי הזמנת הדפסה', 'Print order details', 'site' ); ?></h2>
+			<div class="poc-rtl-configurator-header">
+				<h2 id="poc-rtl-title" class="poc-rtl-title"><?php echo poc_rtl_esc_html( 'הגדרת הזמנת הדפסה', 'Configure your print order', 'site' ); ?></h2>
+				<p><?php echo poc_rtl_esc_html( 'בחרו אפשרויות, העלו קבצים והוסיפו לעגלה בצורה מסודרת.', 'Choose options, upload files, and add the order to cart.', 'site' ); ?></p>
+			</div>
 
 			<div class="poc-rtl-section">
 				<h3><?php echo poc_rtl_esc_html( 'אפשרויות הדפסה', 'Printing options', 'site' ); ?></h3>
@@ -92,14 +95,18 @@ final class POC_RTL_Frontend {
 
 				<label class="poc-rtl-choice">
 					<input type="radio" name="poc_rtl[design_mode]" value="ready" checked>
-					<span><?php echo esc_html( (string) POC_RTL_Settings::get( 'pocrtl_label_ready_design', __( 'יש לי עיצוב מוכן', 'print-order-configurator-rtl' ) ) ); ?></span>
+					<span class="poc-rtl-choice-body">
+						<strong><?php echo esc_html( (string) POC_RTL_Settings::get( 'pocrtl_label_ready_design', __( 'יש לי עיצוב מוכן', 'print-order-configurator-rtl' ) ) ); ?></strong>
+						<small><?php echo poc_rtl_esc_html( 'העלו PDF, תמונות או קבצי עבודה מוכנים.', 'Upload print-ready files or working files.', 'site' ); ?></small>
+					</span>
 				</label>
 
 				<?php if ( POC_RTL_Settings::enabled( 'pocrtl_design_service_enabled_global' ) && ! empty( $config['design_service_enabled'] ) ) : ?>
 					<label class="poc-rtl-choice">
 						<input type="radio" name="poc_rtl[design_mode]" value="need_design">
-						<span>
-							<?php echo esc_html( (string) POC_RTL_Settings::get( 'pocrtl_label_need_design', __( 'אין לי עיצוב - אני צריך עיצוב מהדפוס', 'print-order-configurator-rtl' ) ) ); ?>
+						<span class="poc-rtl-choice-body">
+							<strong><?php echo esc_html( (string) POC_RTL_Settings::get( 'pocrtl_label_need_design', __( 'אין לי עיצוב - אני צריך עיצוב מהדפוס', 'print-order-configurator-rtl' ) ) ); ?></strong>
+							<small><?php echo poc_rtl_esc_html( 'מלאו בריף קצר והצוות יכין את העיצוב ידנית.', 'Fill a short brief and the team will design it manually.', 'site' ); ?></small>
 							<?php if ( (float) $config['design_service_fee'] > 0 ) : ?>
 								<bdi class="poc-rtl-fee">
 									<?php
