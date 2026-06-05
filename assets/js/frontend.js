@@ -24,4 +24,12 @@
 	});
 
 	document.querySelectorAll('.poc-rtl-configurator').forEach(syncPanels);
+
+	document.querySelectorAll('.poc-rtl-configurator').forEach(function (configurator) {
+		var form = configurator.closest('form');
+
+		if (form) {
+			form.enctype = 'multipart/form-data';
+		}
+	});
 }());

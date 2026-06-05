@@ -69,6 +69,12 @@ final class POC_RTL_Validation {
 			return false;
 		}
 
+		if ( ! POC_RTL_Upload_Handler::validate_file_field( 'poc_rtl_ready_files', $config )
+			|| ! POC_RTL_Upload_Handler::validate_file_field( 'poc_rtl_brief_files', $config )
+		) {
+			return false;
+		}
+
 		if ( 'need_design' === $design_mode && ! $this->validate_design_brief( $payload ) ) {
 			return false;
 		}

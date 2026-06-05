@@ -71,6 +71,30 @@ final class POC_RTL_Order {
 				$item->add_meta_data( $label, wc_clean( (string) $data['brief'][ $field ] ), true );
 			}
 		}
+
+		if ( ! empty( $data['files'] ) && is_array( $data['files'] ) ) {
+			foreach ( $data['files'] as $group => $files ) {
+				if ( ! is_array( $files ) || empty( $files ) ) {
+					continue;
+				}
+
+				$names = array();
+
+				foreach ( $files as $file ) {
+					if ( is_array( $file ) && ! empty( $file['original_name'] ) ) {
+						$names[] = wc_clean( (string) $file['original_name'] );
+					}
+				}
+
+				if ( ! empty( $names ) ) {
+					$item->add_meta_data(
+						'ready' === $group ? __( 'קבצי הדפסה', 'print-order-configurator-rtl' ) : __( 'קבצי עיצוב', 'print-order-configurator-rtl' ),
+						implode( ', ', $names ),
+						true
+					);
+				}
+			}
+		}
 	}
 
 	/**

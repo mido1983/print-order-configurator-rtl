@@ -73,6 +73,7 @@ final class POC_RTL_Plugin {
 	private function includes(): void {
 		require_once POC_RTL_PATH . 'includes/class-product-settings.php';
 		require_once POC_RTL_PATH . 'includes/class-frontend.php';
+		require_once POC_RTL_PATH . 'includes/class-upload-handler.php';
 		require_once POC_RTL_PATH . 'includes/class-validation.php';
 		require_once POC_RTL_PATH . 'includes/class-cart.php';
 		require_once POC_RTL_PATH . 'includes/class-order.php';
@@ -84,6 +85,7 @@ final class POC_RTL_Plugin {
 	private function register_services(): void {
 		( new POC_RTL_Product_Settings() )->init();
 		( new POC_RTL_Frontend() )->init();
+		( new POC_RTL_Upload_Handler() )->init();
 		( new POC_RTL_Validation() )->init();
 		( new POC_RTL_Cart() )->init();
 		( new POC_RTL_Order() )->init();
