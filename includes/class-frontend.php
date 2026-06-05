@@ -20,6 +20,7 @@ final class POC_RTL_Frontend {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'render_configurator' ) );
 		add_filter( 'woocommerce_product_single_add_to_cart_text', array( $this, 'single_add_to_cart_text' ) );
+		add_filter( 'gettext', array( $this, 'translate_theme_add_to_cart_text' ), 20, 3 );
 	}
 
 	/**
@@ -191,6 +192,53 @@ final class POC_RTL_Frontend {
 		}
 
 		return $text;
+	}
+
+	/**
+	 * Translate hardcoded theme add-to-cart labels on enabled Hebrew configurator products.
+	 *
+	 * Some themes bypass WooCommerce's add-to-cart text filter and print their own
+	 * translated string, so keep this fallback narrowly scoped to the product page.
+	 *
+	 * @param string $translation Translated text.
+	 * @param string $text        Original source text.
+	 * @param string $domain      Text domain.
+	 */
+	public function translate_theme_add_to_cart_text( string $translation, string $text, string $domain ): string {
+		if ( is_admin() || ! is_product() || ! $this->is_hebrew_frontend_context() ) {
+			return $translation;
+		}
+
+		if ( ! in_array( $text, array( 'Add To Cart', 'Add to cart' ), true ) ) {
+			return $translation;
+		}
+
+		global $product;
+
+		$product_id = $product instanceof WC_Product ? $product->get_id() : get_the_ID();
+
+		if ( ! $product_id || ! POC_RTL_Product_Settings::is_enabled( (int) $product_id ) ) {
+			return $translation;
+		}
+
+		return poc_rtl_ui_text( 'הוסף לעגלה', 'Add to cart', 'site' );
+	}
+
+	/**
+	 * Detect Hebrew storefront context, including WPML language URLs.
+	 */
+	private function is_hebrew_frontend_context(): bool {
+		if ( poc_rtl_is_hebrew_locale( 'site' ) ) {
+			return true;
+		}
+
+		if ( defined( 'ICL_LANGUAGE_CODE' ) && 'he' === strtolower( (string) ICL_LANGUAGE_CODE ) ) {
+			return true;
+		}
+
+		$lang = isset( $_GET['lang'] ) ? sanitize_key( wp_unslash( (string) $_GET['lang'] ) ) : '';
+
+		return 'he' === $lang;
 	}
 
 	/**

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+- Added a scoped fallback that translates theme hardcoded Add To Cart labels on Hebrew configurator product pages.
+- Improved Hebrew frontend detection for WPML `?lang=he` product URLs.
+
 ## 0.1.2
 
 - Fixed product page layout regression.
