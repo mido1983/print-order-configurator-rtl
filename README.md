@@ -6,7 +6,17 @@ This plugin collects production options, design workflow choices, customer instr
 
 ## Status
 
-Early MVP development. See `TASK.md` for the implementation plan and acceptance criteria.
+MVP implementation in progress. See `TASK.md` for the implementation plan and acceptance criteria.
+
+## MVP Features
+
+- Product-level print options.
+- RTL Hebrew storefront configurator.
+- Ready-design and design-service workflows.
+- Upload validation for print/design assets.
+- Cart, checkout, and order metadata.
+- Admin order panel with protected file downloads.
+- Optional design service fee.
 
 ## Requirements
 

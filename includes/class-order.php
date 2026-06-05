@@ -73,7 +73,7 @@ final class POC_RTL_Order {
 		}
 
 		if ( 'need_design' === ( $data['design_mode'] ?? '' ) && ! empty( $data['design_service_fee'] ) ) {
-			$item->add_meta_data( __( 'עלות שירות עיצוב', 'print-order-configurator-rtl' ), wc_price( (float) $data['design_service_fee'] ), true );
+			$item->add_meta_data( __( 'עלות שירות עיצוב', 'print-order-configurator-rtl' ), wp_strip_all_tags( wc_price( (float) $data['design_service_fee'] ) ), true );
 		}
 
 		if ( ! empty( $data['files'] ) && is_array( $data['files'] ) ) {

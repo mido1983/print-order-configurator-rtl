@@ -107,7 +107,7 @@ final class POC_RTL_Upload_Handler {
 			add_query_arg(
 				array(
 					'action' => 'poc_rtl_download_upload',
-					'file'   => rawurlencode( self::relative_upload_path( $path ) ),
+					'file'   => self::relative_upload_path( $path ),
 				),
 				admin_url( 'admin-post.php' )
 			),
@@ -120,7 +120,11 @@ final class POC_RTL_Upload_Handler {
 	 */
 	public function download_upload(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) && ! current_user_can( 'edit_shop_orders' ) ) {
-			wp_die( esc_html__( 'אין הרשאה להוריד את הקובץ.', 'print-order-configurator-rtl' ), 403 );
+			wp_die(
+				esc_html__( 'אין הרשאה להוריד את הקובץ.', 'print-order-configurator-rtl' ),
+				esc_html__( 'אין הרשאה', 'print-order-configurator-rtl' ),
+				array( 'response' => 403 )
+			);
 		}
 
 		check_admin_referer( 'poc_rtl_download_upload' );
@@ -131,7 +135,11 @@ final class POC_RTL_Upload_Handler {
 		$base     = realpath( self::upload_base_dir() );
 
 		if ( false === $real || false === $base || ! str_starts_with( $real, $base ) || ! is_readable( $real ) ) {
-			wp_die( esc_html__( 'הקובץ לא נמצא.', 'print-order-configurator-rtl' ), 404 );
+			wp_die(
+				esc_html__( 'הקובץ לא נמצא.', 'print-order-configurator-rtl' ),
+				esc_html__( 'קובץ לא נמצא', 'print-order-configurator-rtl' ),
+				array( 'response' => 404 )
+			);
 		}
 
 		nocache_headers();

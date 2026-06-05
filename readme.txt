@@ -25,4 +25,4 @@ This plugin is not a visual product designer and does not render print-ready art
 == Changelog ==
 
 = 0.1.0 =
-Initial development scaffold.
+Initial MVP implementation with product settings, RTL configurator, validation, uploads, cart/order metadata, design fee, and admin order panel.

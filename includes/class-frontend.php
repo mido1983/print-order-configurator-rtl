@@ -62,6 +62,7 @@ final class POC_RTL_Frontend {
 		}
 
 		$config = POC_RTL_Product_Settings::get_product_config( $product->get_id() );
+		$accept = $this->allowed_accept_attribute( $config );
 		?>
 		<section class="poc-rtl-configurator" dir="rtl" lang="he" aria-labelledby="poc-rtl-title">
 			<?php wp_nonce_field( 'poc_rtl_add_to_cart', 'poc_rtl_nonce' ); ?>
@@ -114,7 +115,7 @@ final class POC_RTL_Frontend {
 				<textarea id="poc-rtl-production-notes" name="poc_rtl[production_notes]" rows="4" placeholder="<?php esc_attr_e( 'לדוגמה: שלום Michael Design 054-1234567', 'print-order-configurator-rtl' ); ?>"></textarea>
 
 				<label for="poc-rtl-ready-files"><?php esc_html_e( 'קבצים מוכנים להדפסה', 'print-order-configurator-rtl' ); ?></label>
-				<input id="poc-rtl-ready-files" type="file" name="poc_rtl_ready_files[]" multiple>
+				<input id="poc-rtl-ready-files" type="file" name="poc_rtl_ready_files[]" multiple accept="<?php echo esc_attr( $accept ); ?>">
 			</div>
 
 			<div class="poc-rtl-panel" data-poc-rtl-panel="need_design" hidden>
@@ -139,7 +140,7 @@ final class POC_RTL_Frontend {
 				<textarea id="poc-rtl-design-notes" name="poc_rtl[brief][notes]" rows="4"></textarea>
 
 				<label for="poc-rtl-brief-files"><?php esc_html_e( 'לוגואים, תמונות וקבצי השראה', 'print-order-configurator-rtl' ); ?></label>
-				<input id="poc-rtl-brief-files" type="file" name="poc_rtl_brief_files[]" multiple>
+				<input id="poc-rtl-brief-files" type="file" name="poc_rtl_brief_files[]" multiple accept="<?php echo esc_attr( $accept ); ?>">
 			</div>
 		</section>
 		<?php
@@ -185,5 +186,27 @@ final class POC_RTL_Frontend {
 			<input type="<?php echo esc_attr( $type ); ?>" name="poc_rtl[brief][<?php echo esc_attr( $field ); ?>]">
 		</label>
 		<?php
+	}
+
+	/**
+	 * Build file input accept attribute from product config.
+	 *
+	 * @param array<string, mixed> $config Product config.
+	 */
+	private function allowed_accept_attribute( array $config ): string {
+		$extensions = isset( $config['allowed_extensions'] ) && is_array( $config['allowed_extensions'] )
+			? $config['allowed_extensions']
+			: array( 'pdf', 'ai', 'psd', 'eps', 'jpg', 'jpeg', 'png', 'zip' );
+
+		$extensions = array_map(
+			static function ( mixed $extension ): string {
+				$extension = ltrim( sanitize_key( (string) $extension ), '.' );
+
+				return '' === $extension ? '' : '.' . $extension;
+			},
+			$extensions
+		);
+
+		return implode( ',', array_filter( $extensions ) );
 	}
 }
