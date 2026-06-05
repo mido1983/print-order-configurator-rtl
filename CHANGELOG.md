@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2
+
+- Fixed product page layout regression.
+- Removed unsafe gallery width override.
+- Restored WooCommerce product gallery visibility.
+- Improved add-to-cart button placement inside the purchase flow.
+
 ## 0.1.1
 
 - Improved frontend configurator layout.
