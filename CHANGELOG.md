@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4
+
+- Replaced unreliable native print option dropdowns with lightweight RTL radio controls.
+- Kept the existing `poc_rtl[options][...]` field names so selections continue to reach cart and order metadata.
+- Improved option button click/focus states and reduced theme overlay risk.
+
 ## 0.1.3
 
 - Added a scoped fallback that translates theme hardcoded Add To Cart labels on Hebrew configurator product pages.

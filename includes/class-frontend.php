@@ -254,6 +254,27 @@ final class POC_RTL_Frontend {
 		if ( ! is_array( $options ) || empty( $options ) ) {
 			return;
 		}
+
+		$option_labels = poc_rtl_option_labels( $options );
+
+		if ( empty( $option_labels ) ) {
+			return;
+		}
+		?>
+		<div class="poc-rtl-field poc-rtl-option-field">
+			<span id="poc-rtl-<?php echo esc_attr( $field ); ?>-label"><?php echo esc_html( $label ); ?></span>
+			<div class="poc-rtl-option-buttons" role="radiogroup" aria-labelledby="poc-rtl-<?php echo esc_attr( $field ); ?>-label">
+				<?php foreach ( $option_labels as $index => $option_label ) : ?>
+					<label class="poc-rtl-option-button">
+						<input type="radio" name="poc_rtl[options][<?php echo esc_attr( $field ); ?>]" value="<?php echo esc_attr( $option_label ); ?>" <?php checked( 0, $index ); ?>>
+						<span><?php echo esc_html( $option_label ); ?></span>
+					</label>
+				<?php endforeach; ?>
+			</div>
+		</div>
+		<?php
+		return;
+
 		?>
 		<label class="poc-rtl-field">
 			<span><?php echo esc_html( $label ); ?></span>

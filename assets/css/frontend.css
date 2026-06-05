@@ -255,19 +255,35 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
+	position: relative;
+	z-index: 2;
+}
+
+.poc-rtl-option-button {
+	cursor: pointer;
+	display: inline-flex;
+	max-width: 100%;
+	position: relative;
 }
 
 .poc-rtl-option-button input {
-	height: 1px;
+	cursor: pointer;
+	height: 100%;
+	inset: 0;
+	margin: 0;
+	min-height: 0;
 	opacity: 0;
+	padding: 0;
 	position: absolute;
-	width: 1px;
+	width: 100%;
+	z-index: 2;
 }
 
 .poc-rtl-option-button span {
 	background: #f8fafc;
 	border: 1px solid #cbd5e1;
-	border-radius: 999px;
+	border-radius: 8px;
+	box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
 	cursor: pointer;
 	display: inline-flex;
 	font-weight: 700;
@@ -276,6 +292,18 @@
 	align-items: center;
 	justify-content: center;
 	padding: 8px 14px;
+	pointer-events: none;
+	position: relative;
+	text-align: center;
+	transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
+	user-select: none;
+	width: 100%;
+}
+
+.poc-rtl-option-button:hover span,
+.poc-rtl-option-button input:focus-visible + span {
+	border-color: #2563eb;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
 }
 
 .poc-rtl-option-button input:checked + span {

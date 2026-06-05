@@ -4,7 +4,7 @@ Tags: woocommerce, rtl, hebrew, print, uploads
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 0.1.3
+Stable tag: 0.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,6 +23,9 @@ This plugin is not a visual product designer and does not render print-ready art
 3. Activate this plugin.
 
 == Changelog ==
+
+= 0.1.4 =
+Fix print option selector interaction by replacing unreliable native dropdowns with WooCommerce-safe RTL radio controls.
 
 = 0.1.3 =
 Translate theme hardcoded Add To Cart text on Hebrew configurator product pages.
