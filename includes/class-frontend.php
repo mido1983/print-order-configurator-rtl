@@ -67,7 +67,7 @@ final class POC_RTL_Frontend {
 		$lang   = (string) POC_RTL_Settings::get( 'pocrtl_default_interface_language', 'he' );
 		$multiple_uploads = ! empty( $config['max_files'] ) && (int) $config['max_files'] > 1;
 		?>
-		<section class="poc-rtl-configurator" dir="<?php echo esc_attr( $dir ); ?>" lang="<?php echo esc_attr( $lang ); ?>" aria-labelledby="poc-rtl-title">
+		<section class="poc-rtl-configurator pocrtl-configurator pocrtl-configurator-panel" dir="<?php echo esc_attr( $dir ); ?>" lang="<?php echo esc_attr( $lang ); ?>" aria-labelledby="poc-rtl-title">
 			<?php wp_nonce_field( 'poc_rtl_add_to_cart', 'poc_rtl_nonce' ); ?>
 			<div class="poc-rtl-configurator-header">
 				<h2 id="poc-rtl-title" class="poc-rtl-title"><?php echo poc_rtl_esc_html( 'הגדרת הזמנת הדפסה', 'Configure your print order', 'site' ); ?></h2>
@@ -93,7 +93,7 @@ final class POC_RTL_Frontend {
 			<fieldset class="poc-rtl-section poc-rtl-workflow">
 				<legend><?php echo poc_rtl_esc_html( 'מה מצב העיצוב?', 'What is the design status?', 'site' ); ?></legend>
 
-				<label class="poc-rtl-choice">
+				<label class="poc-rtl-choice pocrtl-design-mode-card">
 					<input type="radio" name="poc_rtl[design_mode]" value="ready" checked>
 					<span class="poc-rtl-choice-body">
 						<strong><?php echo esc_html( (string) POC_RTL_Settings::get( 'pocrtl_label_ready_design', __( 'יש לי עיצוב מוכן', 'print-order-configurator-rtl' ) ) ); ?></strong>
@@ -102,7 +102,7 @@ final class POC_RTL_Frontend {
 				</label>
 
 				<?php if ( POC_RTL_Settings::enabled( 'pocrtl_design_service_enabled_global' ) && ! empty( $config['design_service_enabled'] ) ) : ?>
-					<label class="poc-rtl-choice">
+					<label class="poc-rtl-choice pocrtl-design-mode-card">
 						<input type="radio" name="poc_rtl[design_mode]" value="need_design">
 						<span class="poc-rtl-choice-body">
 							<strong><?php echo esc_html( (string) POC_RTL_Settings::get( 'pocrtl_label_need_design', __( 'אין לי עיצוב - אני צריך עיצוב מהדפוס', 'print-order-configurator-rtl' ) ) ); ?></strong>
@@ -263,7 +263,7 @@ final class POC_RTL_Frontend {
 	 */
 	private function render_upload_control( string $id, string $name, string $label, string $prompt, string $accept, bool $multiple ): void {
 		?>
-		<div class="poc-rtl-upload" data-poc-rtl-upload>
+		<div class="poc-rtl-upload pocrtl-upload-zone" data-poc-rtl-upload>
 			<label class="poc-rtl-upload-label" for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
 			<label class="poc-rtl-upload-dropzone" for="<?php echo esc_attr( $id ); ?>">
 				<span class="poc-rtl-upload-icon" aria-hidden="true">+</span>
