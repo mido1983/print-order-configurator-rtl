@@ -154,6 +154,11 @@ final class POC_RTL_Cart {
 		}
 
 		foreach ( array_keys( $this->brief_labels() ) as $field ) {
+			if ( 'email' === $field ) {
+				$data['brief'][ $field ] = isset( $brief[ $field ] ) ? sanitize_email( (string) $brief[ $field ] ) : '';
+				continue;
+			}
+
 			$data['brief'][ $field ] = isset( $brief[ $field ] ) ? sanitize_textarea_field( (string) $brief[ $field ] ) : '';
 		}
 

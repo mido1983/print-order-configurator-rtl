@@ -133,6 +133,7 @@ final class POC_RTL_Upload_Handler {
 		$path     = self::upload_base_dir() . '/' . ltrim( $relative, '/\\' );
 		$real     = realpath( $path );
 		$base     = realpath( self::upload_base_dir() );
+		$base     = false === $base ? false : trailingslashit( $base );
 
 		if ( false === $real || false === $base || ! str_starts_with( $real, $base ) || ! is_readable( $real ) ) {
 			wp_die(
@@ -193,7 +194,7 @@ final class POC_RTL_Upload_Handler {
 			$stored[] = array(
 				'path'          => $uploaded['file'],
 				'type'          => $uploaded['type'] ?? '',
-				'original_name' => sanitize_file_name( (string) $file['name'] ),
+				'original_name' => sanitize_text_field( wp_basename( (string) $file['name'] ) ),
 				'stored_name'   => basename( (string) $uploaded['file'] ),
 				'size'          => filesize( (string) $uploaded['file'] ),
 			);
@@ -236,7 +237,7 @@ final class POC_RTL_Upload_Handler {
 		$allowed   = isset( $config['allowed_extensions'] ) && is_array( $config['allowed_extensions'] )
 			? array_map( 'strval', $config['allowed_extensions'] )
 			: array( 'pdf', 'ai', 'psd', 'eps', 'jpg', 'jpeg', 'png', 'zip' );
-		$dangerous = array( 'php', 'phtml', 'phar', 'exe', 'js', 'sh', 'bat', 'svg' );
+		$dangerous = array( 'php', 'phtml', 'phar', 'exe', 'js', 'sh', 'bat', 'cmd', 'com', 'scr', 'svg' );
 
 		if ( '' === $extension || in_array( $extension, $dangerous, true ) || ! in_array( $extension, $allowed, true ) ) {
 			return new WP_Error( 'poc_rtl_upload_extension', __( 'סוג קובץ לא מורשה להעלאה.', 'print-order-configurator-rtl' ) );

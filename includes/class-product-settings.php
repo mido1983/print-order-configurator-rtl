@@ -272,7 +272,7 @@ final class POC_RTL_Product_Settings {
 	 * @return array<int, string>
 	 */
 	private function sanitize_extensions( string $raw ): array {
-		$dangerous = array( 'php', 'phtml', 'phar', 'exe', 'js', 'sh', 'bat', 'svg' );
+		$dangerous = array( 'php', 'phtml', 'phar', 'exe', 'js', 'sh', 'bat', 'cmd', 'com', 'scr', 'svg' );
 		$parts     = preg_split( '/[\s,]+/', wp_unslash( $raw ) );
 
 		if ( false === $parts ) {
