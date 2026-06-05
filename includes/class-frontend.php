@@ -64,6 +64,7 @@ final class POC_RTL_Frontend {
 		$config = POC_RTL_Product_Settings::get_product_config( $product->get_id() );
 		?>
 		<section class="poc-rtl-configurator" dir="rtl" lang="he" aria-labelledby="poc-rtl-title">
+			<?php wp_nonce_field( 'poc_rtl_add_to_cart', 'poc_rtl_nonce' ); ?>
 			<h2 id="poc-rtl-title" class="poc-rtl-title"><?php esc_html_e( 'פרטי הזמנת הדפסה', 'print-order-configurator-rtl' ); ?></h2>
 
 			<div class="poc-rtl-grid">
