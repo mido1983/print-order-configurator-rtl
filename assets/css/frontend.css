@@ -17,7 +17,22 @@
 	display: grid;
 	gap: 14px;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
-	margin-bottom: 18px;
+}
+
+.poc-rtl-section {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	display: grid;
+	gap: 14px;
+	margin: 0 0 16px;
+	padding: 16px;
+}
+
+.poc-rtl-section h3 {
+	font-size: 1rem;
+	line-height: 1.35;
+	margin: 0;
 }
 
 .poc-rtl-field,
@@ -44,11 +59,9 @@
 }
 
 .poc-rtl-workflow {
-	border: 0;
 	display: grid;
 	gap: 10px;
 	margin: 0 0 18px;
-	padding: 0;
 }
 
 .poc-rtl-workflow legend {
@@ -81,6 +94,39 @@
 .poc-rtl-panel {
 	display: grid;
 	gap: 14px;
+}
+
+.poc-rtl-option-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.poc-rtl-option-button input {
+	height: 1px;
+	opacity: 0;
+	position: absolute;
+	width: 1px;
+}
+
+.poc-rtl-option-button span {
+	background: #f8fafc;
+	border: 1px solid #cbd5e1;
+	border-radius: 999px;
+	cursor: pointer;
+	display: inline-flex;
+	font-weight: 700;
+	min-height: 42px;
+	min-width: 64px;
+	align-items: center;
+	justify-content: center;
+	padding: 8px 14px;
+}
+
+.poc-rtl-option-button input:checked + span {
+	background: #0f172a;
+	border-color: #0f172a;
+	color: #fff;
 }
 
 .poc-rtl-upload {

@@ -52,7 +52,44 @@ function poc_rtl_option_lines_to_text( mixed $value ): string {
 		return '';
 	}
 
-	return implode( "\n", array_map( 'strval', $value ) );
+	return implode( "\n", poc_rtl_option_labels( $value ) );
+}
+
+/**
+ * Extract an option label from legacy strings or structured rows.
+ *
+ * @param mixed $option Option value.
+ */
+function poc_rtl_option_label( mixed $option ): string {
+	if ( is_array( $option ) ) {
+		return isset( $option['label'] ) ? sanitize_text_field( (string) $option['label'] ) : '';
+	}
+
+	return sanitize_text_field( (string) $option );
+}
+
+/**
+ * Extract labels from an option list.
+ *
+ * @param mixed $options Option list.
+ * @return array<int, string>
+ */
+function poc_rtl_option_labels( mixed $options ): array {
+	if ( ! is_array( $options ) ) {
+		return array();
+	}
+
+	$labels = array();
+
+	foreach ( $options as $option ) {
+		$label = poc_rtl_option_label( $option );
+
+		if ( '' !== $label ) {
+			$labels[] = $label;
+		}
+	}
+
+	return array_values( array_unique( $labels ) );
 }
 
 /**

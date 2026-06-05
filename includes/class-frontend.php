@@ -71,10 +71,12 @@ final class POC_RTL_Frontend {
 			<?php wp_nonce_field( 'poc_rtl_add_to_cart', 'poc_rtl_nonce' ); ?>
 			<h2 id="poc-rtl-title" class="poc-rtl-title"><?php echo poc_rtl_esc_html( 'פרטי הזמנת הדפסה', 'Print order details', 'site' ); ?></h2>
 
-			<div class="poc-rtl-grid">
+			<div class="poc-rtl-section">
+				<h3><?php echo poc_rtl_esc_html( 'אפשרויות הדפסה', 'Printing options', 'site' ); ?></h3>
+				<div class="poc-rtl-grid">
 				<?php
 				$this->render_select( 'sizes', __( 'גודל', 'print-order-configurator-rtl' ), $config );
-				$this->render_select( 'quantities', __( 'כמות', 'print-order-configurator-rtl' ), $config );
+				$this->render_quantity_buttons( 'quantities', __( 'כמות', 'print-order-configurator-rtl' ), $config );
 				$this->render_select( 'paper_types', __( 'סוג נייר', 'print-order-configurator-rtl' ), $config );
 				$this->render_select( 'paper_weights', __( 'משקל נייר', 'print-order-configurator-rtl' ), $config );
 				$this->render_select( 'print_sides', __( 'צדדי הדפסה', 'print-order-configurator-rtl' ), $config );
@@ -82,9 +84,10 @@ final class POC_RTL_Frontend {
 				$this->render_select( 'corners', __( 'פינות', 'print-order-configurator-rtl' ), $config );
 				$this->render_select( 'finishing_options', __( 'גימור', 'print-order-configurator-rtl' ), $config );
 				?>
+				</div>
 			</div>
 
-			<fieldset class="poc-rtl-workflow">
+			<fieldset class="poc-rtl-section poc-rtl-workflow">
 				<legend><?php echo poc_rtl_esc_html( 'מה מצב העיצוב?', 'What is the design status?', 'site' ); ?></legend>
 
 				<label class="poc-rtl-choice">
@@ -113,7 +116,8 @@ final class POC_RTL_Frontend {
 				<?php endif; ?>
 			</fieldset>
 
-			<div class="poc-rtl-panel" data-poc-rtl-panel="ready">
+			<div class="poc-rtl-section poc-rtl-panel" data-poc-rtl-panel="ready">
+				<h3><?php echo poc_rtl_esc_html( 'העלאת קבצים', 'Upload files', 'site' ); ?></h3>
 				<label for="poc-rtl-production-notes"><?php echo poc_rtl_esc_html( 'הערות להפקה', 'Production notes', 'site' ); ?></label>
 				<textarea id="poc-rtl-production-notes" name="poc_rtl[production_notes]" rows="4" placeholder="<?php echo poc_rtl_esc_attr( 'לדוגמה: שלום Michael Design 054-1234567', 'Example: Shalom Michael Design 054-1234567', 'site' ); ?>"></textarea>
 
@@ -129,7 +133,8 @@ final class POC_RTL_Frontend {
 				?>
 			</div>
 
-			<div class="poc-rtl-panel" data-poc-rtl-panel="need_design" hidden>
+			<div class="poc-rtl-section poc-rtl-panel" data-poc-rtl-panel="need_design" hidden>
+				<h3><?php echo poc_rtl_esc_html( 'בריף לעיצוב', 'Design brief', 'site' ); ?></h3>
 				<div class="poc-rtl-grid">
 					<?php
 					$this->render_text_input( 'business_name', __( 'שם העסק', 'print-order-configurator-rtl' ) );
@@ -184,10 +189,42 @@ final class POC_RTL_Frontend {
 			<select name="poc_rtl[options][<?php echo esc_attr( $field ); ?>]">
 				<option value=""><?php echo poc_rtl_esc_html( 'בחרו אפשרות', 'Choose an option', 'site' ); ?></option>
 				<?php foreach ( $options as $option ) : ?>
-					<option value="<?php echo esc_attr( (string) $option ); ?>"><?php echo esc_html( (string) $option ); ?></option>
+					<?php $option_label = poc_rtl_option_label( $option ); ?>
+					<?php if ( '' === $option_label ) : ?>
+						<?php continue; ?>
+					<?php endif; ?>
+					<option value="<?php echo esc_attr( $option_label ); ?>"><?php echo esc_html( $option_label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</label>
+		<?php
+	}
+
+	/**
+	 * Render quantity buttons.
+	 *
+	 * @param string               $field Field key.
+	 * @param string               $label Field label.
+	 * @param array<string, mixed> $config Product config.
+	 */
+	private function render_quantity_buttons( string $field, string $label, array $config ): void {
+		$options = poc_rtl_option_labels( $config[ $field ] ?? array() );
+
+		if ( empty( $options ) ) {
+			return;
+		}
+		?>
+		<div class="poc-rtl-field poc-rtl-quantity-field">
+			<span><?php echo esc_html( $label ); ?></span>
+			<div class="poc-rtl-option-buttons" role="radiogroup" aria-label="<?php echo esc_attr( $label ); ?>">
+				<?php foreach ( $options as $index => $option ) : ?>
+					<label class="poc-rtl-option-button">
+						<input type="radio" name="poc_rtl[options][<?php echo esc_attr( $field ); ?>]" value="<?php echo esc_attr( $option ); ?>" <?php checked( 0, $index ); ?>>
+						<span><?php echo esc_html( $option ); ?></span>
+					</label>
+				<?php endforeach; ?>
+			</div>
+		</div>
 		<?php
 	}
 

@@ -134,7 +134,7 @@ final class POC_RTL_Validation {
 				return false;
 			}
 
-			if ( ! in_array( $value, array_map( 'strval', $allowed ), true ) ) {
+			if ( ! in_array( $value, poc_rtl_option_labels( $allowed ), true ) ) {
 				wc_add_notice( __( 'נבחרה אפשרות שאינה זמינה למוצר הזה.', 'print-order-configurator-rtl' ), 'error' );
 				return false;
 			}

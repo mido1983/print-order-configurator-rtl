@@ -23,6 +23,33 @@ final class POC_RTL_Product_Settings {
 		add_filter( 'woocommerce_product_data_tabs', array( $this, 'add_product_data_tab' ) );
 		add_action( 'woocommerce_product_data_panels', array( $this, 'render_product_data_panel' ) );
 		add_action( 'woocommerce_admin_process_product_object', array( $this, 'save_product_settings' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+	}
+
+	/**
+	 * Enqueue product settings assets.
+	 */
+	public function enqueue_assets(): void {
+		$screen = get_current_screen();
+
+		if ( ! $screen || 'product' !== $screen->id ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'poc-rtl-product-settings',
+			POC_RTL_URL . 'assets/css/product-settings.css',
+			array(),
+			POC_RTL_VERSION
+		);
+
+		wp_enqueue_script(
+			'poc-rtl-product-settings',
+			POC_RTL_URL . 'assets/js/product-settings.js',
+			array(),
+			POC_RTL_VERSION,
+			true
+		);
 	}
 
 	/**
@@ -71,17 +98,17 @@ final class POC_RTL_Product_Settings {
 
 			<div class="options_group">
 				<?php
-				$this->render_textarea_field( 'sizes', __( 'Sizes', 'print-order-configurator-rtl' ), $config );
-				$this->render_textarea_field( 'quantities', __( 'Quantities', 'print-order-configurator-rtl' ), $config );
-				$this->render_textarea_field( 'paper_types', __( 'Paper types', 'print-order-configurator-rtl' ), $config );
-				$this->render_textarea_field( 'paper_weights', __( 'Paper weights', 'print-order-configurator-rtl' ), $config );
-				$this->render_textarea_field( 'print_sides', __( 'Print sides', 'print-order-configurator-rtl' ), $config );
-				$this->render_textarea_field( 'lamination', __( 'Lamination', 'print-order-configurator-rtl' ), $config );
-				$this->render_textarea_field( 'corners', __( 'Corners', 'print-order-configurator-rtl' ), $config );
-				$this->render_textarea_field( 'finishing_options', __( 'Finishing options', 'print-order-configurator-rtl' ), $config );
+				$this->render_repeatable_field( 'sizes', poc_rtl_ui_text( 'מידות זמינות', 'Available sizes', 'user' ), $config );
+				$this->render_repeatable_field( 'quantities', poc_rtl_ui_text( 'כמויות זמינות', 'Available quantities', 'user' ), $config );
+				$this->render_repeatable_field( 'paper_types', poc_rtl_ui_text( 'סוגי נייר זמינים', 'Available paper types', 'user' ), $config );
+				$this->render_repeatable_field( 'paper_weights', poc_rtl_ui_text( 'משקלי נייר זמינים', 'Available paper weights', 'user' ), $config );
+				$this->render_repeatable_field( 'print_sides', poc_rtl_ui_text( 'צדדי הדפסה זמינים', 'Available print sides', 'user' ), $config );
+				$this->render_repeatable_field( 'lamination', poc_rtl_ui_text( 'אפשרויות למינציה', 'Available lamination options', 'user' ), $config );
+				$this->render_repeatable_field( 'corners', poc_rtl_ui_text( 'אפשרויות פינות', 'Available corner options', 'user' ), $config );
+				$this->render_repeatable_field( 'finishing_options', poc_rtl_ui_text( 'אפשרויות גימור', 'Available finishing options', 'user' ), $config );
 				?>
 				<p class="description">
-					<?php esc_html_e( 'Enter one available option per line. Hebrew and mixed Hebrew/English values are supported.', 'print-order-configurator-rtl' ); ?>
+					<?php echo poc_rtl_esc_html( 'הוסיפו אפשרויות ברורות שהלקוח יבחר מהן בעמוד המוצר.', 'Add clear options customers will choose from on the product page.', 'user' ); ?>
 				</p>
 			</div>
 
@@ -166,8 +193,8 @@ final class POC_RTL_Product_Settings {
 
 		foreach ( self::option_fields() as $field ) {
 			$key              = 'poc_rtl_' . $field;
-			$raw              = isset( $_POST[ $key ] ) ? (string) $_POST[ $key ] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$config[ $field ] = poc_rtl_sanitize_option_lines( $raw );
+			$raw              = isset( $_POST[ $key ] ) ? $_POST[ $key ] : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$config[ $field ] = $this->sanitize_option_rows( $raw );
 		}
 
 		$config['design_service_enabled'] = isset( $_POST['poc_rtl_design_service_enabled'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -213,15 +240,85 @@ final class POC_RTL_Product_Settings {
 	 * @param string               $label Field label.
 	 * @param array<string, mixed> $config Product config.
 	 */
-	private function render_textarea_field( string $field, string $label, array $config ): void {
-		woocommerce_wp_textarea_input(
-			array(
-				'id'    => 'poc_rtl_' . $field,
-				'label' => $label,
-				'value' => poc_rtl_option_lines_to_text( $config[ $field ] ?? array() ),
-				'rows'  => 4,
-			)
-		);
+	private function render_repeatable_field( string $field, string $label, array $config ): void {
+		$options = $config[ $field ] ?? array();
+		?>
+		<div class="poc-rtl-repeatable" data-poc-rtl-repeatable="<?php echo esc_attr( $field ); ?>">
+			<p class="form-field poc-rtl-repeatable-heading">
+				<label><?php echo esc_html( $label ); ?></label>
+				<span class="woocommerce-help-tip" tabindex="0" aria-label="<?php echo poc_rtl_esc_attr( 'הלקוח יבחר אחת מהאפשרויות האלה בעמוד המוצר.', 'Customers will choose one of these options on the product page.', 'user' ); ?>"></span>
+			</p>
+			<div class="poc-rtl-repeatable-rows" data-poc-rtl-repeatable-rows>
+				<?php foreach ( $options as $option ) : ?>
+					<?php $this->render_repeatable_row( $field, is_array( $option ) ? $option : array( 'label' => $option, 'price_modifier' => '' ) ); ?>
+				<?php endforeach; ?>
+			</div>
+			<p class="poc-rtl-repeatable-empty" data-poc-rtl-repeatable-empty><?php echo poc_rtl_esc_html( 'עדיין אין אפשרויות. לחצו על הוספת אפשרות כדי להתחיל.', 'No options yet. Click Add option to start.', 'user' ); ?></p>
+			<p class="toolbar">
+				<button type="button" class="button poc-rtl-add-option" data-poc-rtl-add-option><?php echo poc_rtl_esc_html( 'הוסף אפשרות', 'Add option', 'user' ); ?></button>
+			</p>
+			<template data-poc-rtl-repeatable-template>
+				<?php $this->render_repeatable_row( $field, array( 'label' => '', 'price_modifier' => '' ) ); ?>
+			</template>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render one repeatable row.
+	 *
+	 * @param string               $field Field key.
+	 * @param array<string, mixed> $option Option row.
+	 */
+	private function render_repeatable_row( string $field, array $option ): void {
+		?>
+		<div class="poc-rtl-repeatable-row">
+			<input type="text" name="poc_rtl_<?php echo esc_attr( $field ); ?>[label][]" value="<?php echo esc_attr( poc_rtl_option_label( $option ) ); ?>" placeholder="<?php echo poc_rtl_esc_attr( 'שם אפשרות', 'Option label', 'user' ); ?>">
+			<input type="number" name="poc_rtl_<?php echo esc_attr( $field ); ?>[price_modifier][]" value="<?php echo esc_attr( (string) ( $option['price_modifier'] ?? '' ) ); ?>" step="0.01" placeholder="<?php echo poc_rtl_esc_attr( 'תוספת מחיר עתידית', 'Future price modifier', 'user' ); ?>">
+			<button type="button" class="button-link-delete poc-rtl-remove-option"><?php echo poc_rtl_esc_html( 'הסר', 'Remove', 'user' ); ?></button>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Sanitize structured option rows.
+	 *
+	 * @param mixed $raw Raw submitted rows.
+	 * @return array<int, array<string, string>>
+	 */
+	private function sanitize_option_rows( mixed $raw ): array {
+		if ( is_string( $raw ) ) {
+			return array_map(
+				static fn( string $label ): array => array(
+					'label'          => $label,
+					'price_modifier' => '',
+				),
+				poc_rtl_sanitize_option_lines( $raw )
+			);
+		}
+
+		if ( ! is_array( $raw ) ) {
+			return array();
+		}
+
+		$labels = isset( $raw['label'] ) && is_array( $raw['label'] ) ? $raw['label'] : array();
+		$prices = isset( $raw['price_modifier'] ) && is_array( $raw['price_modifier'] ) ? $raw['price_modifier'] : array();
+		$rows   = array();
+
+		foreach ( $labels as $index => $label ) {
+			$label = sanitize_text_field( wp_unslash( (string) $label ) );
+
+			if ( '' === $label ) {
+				continue;
+			}
+
+			$rows[] = array(
+				'label'          => $label,
+				'price_modifier' => isset( $prices[ $index ] ) ? wc_format_decimal( wp_unslash( $prices[ $index ] ) ) : '',
+			);
+		}
+
+		return $rows;
 	}
 
 	/**
