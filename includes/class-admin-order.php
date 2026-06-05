@@ -78,18 +78,21 @@ final class POC_RTL_Admin_Order {
 		wp_nonce_field( 'poc_rtl_save_order_panel', 'poc_rtl_order_panel_nonce' );
 
 		$current_status = POC_RTL_Statuses::sanitize( (string) $order->get_meta( POC_RTL_Statuses::ORDER_META_KEY ) );
+		$direction      = (string) POC_RTL_Settings::get( 'pocrtl_admin_panel_direction', 'rtl' );
 		?>
-		<div class="poc-rtl-admin-order" dir="rtl" lang="he">
-			<label class="poc-rtl-admin-status" for="poc-rtl-workflow-status">
-				<span><?php esc_html_e( 'סטטוס פנימי', 'print-order-configurator-rtl' ); ?></span>
-				<select id="poc-rtl-workflow-status" name="poc_rtl_workflow_status">
-					<?php foreach ( POC_RTL_Statuses::all() as $value => $label ) : ?>
-						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $current_status, $value ); ?>>
-							<?php echo esc_html( $label ); ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
-			</label>
+		<div class="poc-rtl-admin-order" dir="<?php echo esc_attr( $direction ); ?>" lang="he">
+			<?php if ( POC_RTL_Settings::enabled( 'pocrtl_enable_internal_status' ) ) : ?>
+				<label class="poc-rtl-admin-status" for="poc-rtl-workflow-status">
+					<span><?php esc_html_e( 'סטטוס פנימי', 'print-order-configurator-rtl' ); ?></span>
+					<select id="poc-rtl-workflow-status" name="poc_rtl_workflow_status">
+						<?php foreach ( POC_RTL_Statuses::all() as $value => $label ) : ?>
+							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $current_status, $value ); ?>>
+								<?php echo esc_html( $label ); ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+				</label>
+			<?php endif; ?>
 
 			<?php
 			$has_data = false;
@@ -132,6 +135,10 @@ final class POC_RTL_Admin_Order {
 		$order = wc_get_order( $order_id );
 
 		if ( ! $order instanceof WC_Order ) {
+			return;
+		}
+
+		if ( ! POC_RTL_Settings::enabled( 'pocrtl_enable_internal_status' ) ) {
 			return;
 		}
 
@@ -234,9 +241,14 @@ final class POC_RTL_Admin_Order {
 					?>
 					<li>
 						<span><?php echo esc_html( 'ready' === $group ? __( 'קובץ הדפסה', 'print-order-configurator-rtl' ) : __( 'קובץ עיצוב', 'print-order-configurator-rtl' ) ); ?></span>
-						<a href="<?php echo esc_url( POC_RTL_Upload_Handler::build_download_url( (string) $file['path'] ) ); ?>">
-							<?php echo esc_html( (string) $file['original_name'] ); ?>
-						</a>
+						<?php $download_url = POC_RTL_Upload_Handler::build_download_url( (string) $file['path'] ); ?>
+						<?php if ( '' !== $download_url ) : ?>
+							<a href="<?php echo esc_url( $download_url ); ?>">
+								<?php echo esc_html( (string) $file['original_name'] ); ?>
+							</a>
+						<?php else : ?>
+							<span><?php echo esc_html( (string) $file['original_name'] ); ?></span>
+						<?php endif; ?>
 					</li>
 				<?php endforeach; ?>
 			<?php endforeach; ?>

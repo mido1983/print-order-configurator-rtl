@@ -103,6 +103,10 @@ final class POC_RTL_Upload_Handler {
 	 * @param string $path Absolute stored path.
 	 */
 	public static function build_download_url( string $path ): string {
+		if ( ! POC_RTL_Settings::enabled( 'pocrtl_protect_admin_downloads' ) ) {
+			return '';
+		}
+
 		return wp_nonce_url(
 			add_query_arg(
 				array(
@@ -239,6 +243,10 @@ final class POC_RTL_Upload_Handler {
 			: array( 'pdf', 'ai', 'psd', 'eps', 'jpg', 'jpeg', 'png', 'zip' );
 		$dangerous = array( 'php', 'phtml', 'phar', 'exe', 'js', 'sh', 'bat', 'cmd', 'com', 'scr', 'svg' );
 
+		if ( POC_RTL_Settings::enabled( 'pocrtl_allow_svg_uploads' ) ) {
+			$dangerous = array_diff( $dangerous, array( 'svg' ) );
+		}
+
 		if ( '' === $extension || in_array( $extension, $dangerous, true ) || ! in_array( $extension, $allowed, true ) ) {
 			return new WP_Error( 'poc_rtl_upload_extension', __( 'סוג קובץ לא מורשה להעלאה.', 'print-order-configurator-rtl' ) );
 		}
@@ -295,7 +303,7 @@ final class POC_RTL_Upload_Handler {
 	 * @return array<string, mixed>
 	 */
 	public function filter_upload_dir( array $dirs ): array {
-		$subdir = '/' . self::UPLOAD_SUBDIR . gmdate( '/Y/m' );
+		$subdir = '/' . POC_RTL_Settings::upload_directory() . gmdate( '/Y/m' );
 
 		$dirs['subdir'] = $subdir;
 		$dirs['path']   = $dirs['basedir'] . $subdir;
@@ -352,6 +360,7 @@ final class POC_RTL_Upload_Handler {
 			'jpeg' => 'image/jpeg',
 			'png'  => 'image/png',
 			'zip'  => 'application/zip',
+			'svg'  => 'image/svg+xml',
 		);
 	}
 
@@ -361,7 +370,7 @@ final class POC_RTL_Upload_Handler {
 	private static function upload_base_dir(): string {
 		$uploads = wp_get_upload_dir();
 
-		return trailingslashit( $uploads['basedir'] ) . self::UPLOAD_SUBDIR;
+		return trailingslashit( $uploads['basedir'] ) . POC_RTL_Settings::upload_directory();
 	}
 
 	/**

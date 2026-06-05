@@ -203,7 +203,7 @@ final class POC_RTL_Product_Settings {
 	 * @param int $product_id Product ID.
 	 */
 	public static function is_enabled( int $product_id ): bool {
-		return 'yes' === get_post_meta( $product_id, self::META_ENABLED, true );
+		return POC_RTL_Settings::is_global_enabled() && 'yes' === get_post_meta( $product_id, self::META_ENABLED, true );
 	}
 
 	/**
@@ -230,6 +230,8 @@ final class POC_RTL_Product_Settings {
 	 * @return array<string, mixed>
 	 */
 	private static function default_config(): array {
+		$multiple_uploads = POC_RTL_Settings::enabled( 'pocrtl_default_multiple_uploads' );
+
 		return array(
 			'sizes'                  => array(),
 			'quantities'             => array(),
@@ -239,11 +241,11 @@ final class POC_RTL_Product_Settings {
 			'lamination'             => array(),
 			'corners'                => array(),
 			'finishing_options'      => array(),
-			'design_service_enabled' => true,
-			'design_service_fee'     => '0',
-			'max_files'              => 20,
-			'max_file_size_mb'       => 25,
-			'allowed_extensions'     => array( 'pdf', 'ai', 'psd', 'eps', 'jpg', 'jpeg', 'png', 'zip' ),
+			'design_service_enabled' => POC_RTL_Settings::enabled( 'pocrtl_design_service_enabled_global' ),
+			'design_service_fee'     => (string) POC_RTL_Settings::get( 'pocrtl_default_design_service_price', '0' ),
+			'max_files'              => $multiple_uploads ? 20 : 1,
+			'max_file_size_mb'       => (int) POC_RTL_Settings::get( 'pocrtl_default_max_file_size_mb', 100 ),
+			'allowed_extensions'     => POC_RTL_Settings::default_allowed_extensions(),
 		);
 	}
 
@@ -273,6 +275,11 @@ final class POC_RTL_Product_Settings {
 	 */
 	private function sanitize_extensions( string $raw ): array {
 		$dangerous = array( 'php', 'phtml', 'phar', 'exe', 'js', 'sh', 'bat', 'cmd', 'com', 'scr', 'svg' );
+
+		if ( POC_RTL_Settings::enabled( 'pocrtl_allow_svg_uploads' ) ) {
+			$dangerous = array_diff( $dangerous, array( 'svg' ) );
+		}
+
 		$parts     = preg_split( '/[\s,]+/', wp_unslash( $raw ) );
 
 		if ( false === $parts ) {

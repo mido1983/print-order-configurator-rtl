@@ -58,6 +58,10 @@ final class POC_RTL_Pricing {
 			return;
 		}
 
+		if ( ! POC_RTL_Settings::enabled( 'pocrtl_design_service_enabled_global' ) ) {
+			return;
+		}
+
 		$total = 0.0;
 
 		foreach ( $cart->get_cart() as $cart_item ) {

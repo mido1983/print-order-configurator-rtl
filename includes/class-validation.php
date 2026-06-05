@@ -59,7 +59,7 @@ final class POC_RTL_Validation {
 			return false;
 		}
 
-		if ( 'need_design' === $design_mode && empty( $config['design_service_enabled'] ) ) {
+		if ( 'need_design' === $design_mode && ( ! POC_RTL_Settings::enabled( 'pocrtl_design_service_enabled_global' ) || empty( $config['design_service_enabled'] ) ) ) {
 			wc_add_notice( __( 'שירות עיצוב אינו זמין למוצר הזה.', 'print-order-configurator-rtl' ), 'error' );
 			return false;
 		}

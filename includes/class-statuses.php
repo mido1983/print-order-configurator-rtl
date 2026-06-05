@@ -21,13 +21,29 @@ final class POC_RTL_Statuses {
 	 * @return array<string, string>
 	 */
 	public static function all(): array {
-		return array(
+		$defaults = array(
 			'files_received'            => __( 'קבצים התקבלו', 'print-order-configurator-rtl' ),
 			'waiting_for_design'        => __( 'ממתין לעיצוב', 'print-order-configurator-rtl' ),
 			'waiting_customer_approval' => __( 'ממתין לאישור לקוח', 'print-order-configurator-rtl' ),
 			'ready_for_print'           => __( 'מוכן להדפסה', 'print-order-configurator-rtl' ),
 			'sent_to_print'             => __( 'נשלח להדפסה', 'print-order-configurator-rtl' ),
 		);
+
+		$lines = poc_rtl_sanitize_option_lines( (string) POC_RTL_Settings::get( 'pocrtl_workflow_statuses', '' ) );
+
+		if ( empty( $lines ) ) {
+			return $defaults;
+		}
+
+		$statuses     = array();
+		$default_keys = array_keys( $defaults );
+
+		foreach ( array_values( $lines ) as $index => $label ) {
+			$key              = $default_keys[ $index ] ?? 'custom_' . md5( $label );
+			$statuses[ $key ] = $label;
+		}
+
+		return $statuses;
 	}
 
 	/**

@@ -40,6 +40,11 @@ final class POC_RTL_Order {
 		$data = $values[ POC_RTL_Cart::CART_KEY ];
 
 		$item->add_meta_data( self::ORDER_ITEM_META, $data, true );
+
+		if ( ! POC_RTL_Settings::enabled( 'pocrtl_show_config_in_emails' ) ) {
+			return;
+		}
+
 		$item->add_meta_data(
 			__( 'מצב עיצוב', 'print-order-configurator-rtl' ),
 			'need_design' === ( $data['design_mode'] ?? '' )

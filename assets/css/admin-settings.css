@@ -1,0 +1,30 @@
+.poc-rtl-settings {
+	max-width: 980px;
+}
+
+.poc-rtl-settings-section {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	margin: 16px 0;
+	padding: 0 16px 8px;
+}
+
+.poc-rtl-settings-section h2 {
+	border-bottom: 1px solid #dcdcde;
+	margin: 0 -16px 8px;
+	padding: 14px 16px;
+}
+
+.poc-rtl-settings .form-table th {
+	text-align: right;
+	width: 260px;
+}
+
+.poc-rtl-settings input[type="text"],
+.poc-rtl-settings textarea {
+	direction: rtl;
+}
+
+.poc-rtl-settings input[type="number"] {
+	direction: ltr;
+}

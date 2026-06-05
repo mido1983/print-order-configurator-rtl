@@ -52,6 +52,14 @@ final class POC_RTL_Cart {
 	 * @return array<int, array<string, mixed>>
 	 */
 	public function display_cart_item_data( array $item_data, array $cart_item ): array {
+		if ( is_cart() && ! POC_RTL_Settings::enabled( 'pocrtl_show_config_in_cart' ) ) {
+			return $item_data;
+		}
+
+		if ( is_checkout() && ! POC_RTL_Settings::enabled( 'pocrtl_show_config_in_checkout' ) ) {
+			return $item_data;
+		}
+
 		if ( empty( $cart_item[ self::CART_KEY ] ) || ! is_array( $cart_item[ self::CART_KEY ] ) ) {
 			return $item_data;
 		}

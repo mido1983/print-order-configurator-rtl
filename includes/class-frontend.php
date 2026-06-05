@@ -63,8 +63,11 @@ final class POC_RTL_Frontend {
 
 		$config = POC_RTL_Product_Settings::get_product_config( $product->get_id() );
 		$accept = $this->allowed_accept_attribute( $config );
+		$dir    = (string) POC_RTL_Settings::get( 'pocrtl_default_direction', 'rtl' );
+		$lang   = (string) POC_RTL_Settings::get( 'pocrtl_default_interface_language', 'he' );
+		$multiple_uploads = ! empty( $config['max_files'] ) && (int) $config['max_files'] > 1;
 		?>
-		<section class="poc-rtl-configurator" dir="rtl" lang="he" aria-labelledby="poc-rtl-title">
+		<section class="poc-rtl-configurator" dir="<?php echo esc_attr( $dir ); ?>" lang="<?php echo esc_attr( $lang ); ?>" aria-labelledby="poc-rtl-title">
 			<?php wp_nonce_field( 'poc_rtl_add_to_cart', 'poc_rtl_nonce' ); ?>
 			<h2 id="poc-rtl-title" class="poc-rtl-title"><?php esc_html_e( 'פרטי הזמנת הדפסה', 'print-order-configurator-rtl' ); ?></h2>
 
@@ -86,14 +89,14 @@ final class POC_RTL_Frontend {
 
 				<label class="poc-rtl-choice">
 					<input type="radio" name="poc_rtl[design_mode]" value="ready" checked>
-					<span><?php esc_html_e( 'יש לי עיצוב מוכן', 'print-order-configurator-rtl' ); ?></span>
+					<span><?php echo esc_html( (string) POC_RTL_Settings::get( 'pocrtl_label_ready_design', __( 'יש לי עיצוב מוכן', 'print-order-configurator-rtl' ) ) ); ?></span>
 				</label>
 
-				<?php if ( ! empty( $config['design_service_enabled'] ) ) : ?>
+				<?php if ( POC_RTL_Settings::enabled( 'pocrtl_design_service_enabled_global' ) && ! empty( $config['design_service_enabled'] ) ) : ?>
 					<label class="poc-rtl-choice">
 						<input type="radio" name="poc_rtl[design_mode]" value="need_design">
 						<span>
-							<?php esc_html_e( 'אין לי עיצוב - אני צריך עיצוב מהדפוס', 'print-order-configurator-rtl' ); ?>
+							<?php echo esc_html( (string) POC_RTL_Settings::get( 'pocrtl_label_need_design', __( 'אין לי עיצוב - אני צריך עיצוב מהדפוס', 'print-order-configurator-rtl' ) ) ); ?>
 							<?php if ( (float) $config['design_service_fee'] > 0 ) : ?>
 								<bdi class="poc-rtl-fee">
 									<?php
@@ -115,7 +118,7 @@ final class POC_RTL_Frontend {
 				<textarea id="poc-rtl-production-notes" name="poc_rtl[production_notes]" rows="4" placeholder="<?php esc_attr_e( 'לדוגמה: שלום Michael Design 054-1234567', 'print-order-configurator-rtl' ); ?>"></textarea>
 
 				<label for="poc-rtl-ready-files"><?php esc_html_e( 'קבצים מוכנים להדפסה', 'print-order-configurator-rtl' ); ?></label>
-				<input id="poc-rtl-ready-files" type="file" name="poc_rtl_ready_files[]" multiple accept="<?php echo esc_attr( $accept ); ?>">
+				<input id="poc-rtl-ready-files" type="file" name="poc_rtl_ready_files[]"<?php echo $multiple_uploads ? ' multiple' : ''; ?> accept="<?php echo esc_attr( $accept ); ?>">
 			</div>
 
 			<div class="poc-rtl-panel" data-poc-rtl-panel="need_design" hidden>
@@ -140,7 +143,7 @@ final class POC_RTL_Frontend {
 				<textarea id="poc-rtl-design-notes" name="poc_rtl[brief][notes]" rows="4"></textarea>
 
 				<label for="poc-rtl-brief-files"><?php esc_html_e( 'לוגואים, תמונות וקבצי השראה', 'print-order-configurator-rtl' ); ?></label>
-				<input id="poc-rtl-brief-files" type="file" name="poc_rtl_brief_files[]" multiple accept="<?php echo esc_attr( $accept ); ?>">
+				<input id="poc-rtl-brief-files" type="file" name="poc_rtl_brief_files[]"<?php echo $multiple_uploads ? ' multiple' : ''; ?> accept="<?php echo esc_attr( $accept ); ?>">
 			</div>
 		</section>
 		<?php
