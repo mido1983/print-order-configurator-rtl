@@ -62,6 +62,23 @@ final class POC_RTL_Plugin {
 			add_action( 'admin_notices', array( $this, 'render_woocommerce_missing_notice' ) );
 			return;
 		}
+
+		$this->includes();
+		$this->register_services();
+	}
+
+	/**
+	 * Load plugin classes.
+	 */
+	private function includes(): void {
+		require_once POC_RTL_PATH . 'includes/class-product-settings.php';
+	}
+
+	/**
+	 * Register service hooks.
+	 */
+	private function register_services(): void {
+		( new POC_RTL_Product_Settings() )->init();
 	}
 
 	/**
