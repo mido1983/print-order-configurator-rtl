@@ -19,6 +19,7 @@ final class POC_RTL_Frontend {
 	public function init(): void {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'render_configurator' ) );
+		add_filter( 'woocommerce_product_single_add_to_cart_text', array( $this, 'single_add_to_cart_text' ) );
 	}
 
 	/**
@@ -175,6 +176,21 @@ final class POC_RTL_Frontend {
 			</div>
 		</section>
 		<?php
+	}
+
+	/**
+	 * Use a Hebrew CTA when the site is Hebrew and this product uses the configurator.
+	 *
+	 * @param string $text Button text.
+	 */
+	public function single_add_to_cart_text( string $text ): string {
+		global $product;
+
+		if ( $product instanceof WC_Product && POC_RTL_Product_Settings::is_enabled( $product->get_id() ) && poc_rtl_is_hebrew_locale( 'site' ) ) {
+			return __( 'הוסף לעגלה', 'print-order-configurator-rtl' );
+		}
+
+		return $text;
 	}
 
 	/**

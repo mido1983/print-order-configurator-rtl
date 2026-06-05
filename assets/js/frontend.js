@@ -58,6 +58,17 @@
 		if (form) {
 			form.enctype = 'multipart/form-data';
 			form.classList.add('poc-rtl-cart-form');
+
+			var summary = form.closest('.summary');
+			var product = form.closest('.product');
+
+			if (summary) {
+				summary.classList.add('pocrtl-summary-panel');
+			}
+
+			if (product) {
+				product.classList.add('pocrtl-product-layout');
+			}
 		}
 	});
 }());
