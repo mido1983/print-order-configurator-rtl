@@ -249,6 +249,20 @@ final class POC_RTL_Admin_Order {
 						<?php else : ?>
 							<span><?php echo esc_html( (string) $file['original_name'] ); ?></span>
 						<?php endif; ?>
+						<small>
+							<?php
+							$details = array_filter(
+								array(
+									! empty( $file['type'] ) ? (string) $file['type'] : '',
+									! empty( $file['size'] ) ? size_format( (int) $file['size'] ) : '',
+								)
+							);
+							echo esc_html( implode( ' · ', $details ) );
+							?>
+						</small>
+						<?php if ( ! empty( $file['type'] ) && str_starts_with( (string) $file['type'], 'image/' ) && ! empty( $file['path'] ) ) : ?>
+							<span class="poc-rtl-admin-thumb" aria-hidden="true"></span>
+						<?php endif; ?>
 					</li>
 				<?php endforeach; ?>
 			<?php endforeach; ?>

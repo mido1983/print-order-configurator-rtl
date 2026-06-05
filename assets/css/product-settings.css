@@ -25,6 +25,34 @@
 	margin: 0 0 14px;
 }
 
+.poc-rtl-product-warning {
+	background: #fff7ed;
+	border: 1px solid #fed7aa;
+	border-radius: 8px;
+	color: #9a3412;
+	display: grid;
+	gap: 4px;
+	margin: 0 0 14px;
+	padding: 12px 14px;
+}
+
+.poc-rtl-presets {
+	align-items: center;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 0 14px;
+	padding: 10px;
+}
+
+.poc-rtl-presets span {
+	color: #475569;
+	font-weight: 700;
+}
+
 .poc-rtl-repeatable {
 	border-bottom: 1px solid #e5e7eb;
 	padding: 12px 0 16px;

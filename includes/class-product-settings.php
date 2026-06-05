@@ -83,6 +83,13 @@ final class POC_RTL_Product_Settings {
 		$enabled = 'yes' === get_post_meta( $post->ID, self::META_ENABLED, true );
 		?>
 		<div id="poc_rtl_product_data" class="panel woocommerce_options_panel">
+			<?php if ( $enabled && ! $this->has_print_options( $config ) ) : ?>
+				<div class="poc-rtl-product-warning">
+					<strong><?php echo poc_rtl_esc_html( 'המוצר מופעל אבל אין אפשרויות הדפסה.', 'Configurator is enabled but no print options are configured.', 'user' ); ?></strong>
+					<span><?php echo poc_rtl_esc_html( 'הוסיפו אפשרויות ידנית או השתמשו בפריסט כדי למנוע עמוד מוצר ריק.', 'Add options manually or use a preset to avoid an empty product page.', 'user' ); ?></span>
+				</div>
+			<?php endif; ?>
+
 			<div class="options_group poc-rtl-product-section">
 				<h3><?php echo poc_rtl_esc_html( 'הגדרות כלליות', 'General settings', 'user' ); ?></h3>
 				<p class="poc-rtl-section-help"><?php echo poc_rtl_esc_html( 'הפעילו את הקונפיגורטור רק למוצרים שבהם הלקוח צריך לבחור אפשרויות הדפסה.', 'Enable the configurator only for products where customers need print options.', 'user' ); ?></p>
@@ -101,6 +108,14 @@ final class POC_RTL_Product_Settings {
 			<div class="options_group poc-rtl-product-section">
 				<h3><?php echo poc_rtl_esc_html( 'אפשרויות הדפסה', 'Printing options', 'user' ); ?></h3>
 				<p class="poc-rtl-section-help"><?php echo poc_rtl_esc_html( 'הגדירו רק אפשרויות אמיתיות וברורות. הלקוח לא יקליד ערכים תפעוליים ידנית.', 'Define only real, clear options. Customers will not type operational values manually.', 'user' ); ?></p>
+				<div class="poc-rtl-presets">
+					<span><?php echo poc_rtl_esc_html( 'הכנסה מהירה:', 'Quick presets:', 'user' ); ?></span>
+					<button type="button" class="button" data-poc-rtl-preset="business_cards"><?php echo poc_rtl_esc_html( 'כרטיסי ביקור', 'Business cards', 'user' ); ?></button>
+					<button type="button" class="button" data-poc-rtl-preset="flyers"><?php echo poc_rtl_esc_html( 'פליירים', 'Flyers', 'user' ); ?></button>
+					<button type="button" class="button" data-poc-rtl-preset="stickers"><?php echo poc_rtl_esc_html( 'מדבקות', 'Stickers', 'user' ); ?></button>
+					<button type="button" class="button" data-poc-rtl-preset="magnets"><?php echo poc_rtl_esc_html( 'מגנטים', 'Magnets', 'user' ); ?></button>
+					<button type="button" class="button" data-poc-rtl-preset="posters"><?php echo poc_rtl_esc_html( 'פוסטרים', 'Posters', 'user' ); ?></button>
+				</div>
 				<?php
 				$this->render_repeatable_field( 'sizes', poc_rtl_ui_text( 'מידות זמינות', 'Available sizes', 'user' ), $config );
 				$this->render_repeatable_field( 'quantities', poc_rtl_ui_text( 'כמויות זמינות', 'Available quantities', 'user' ), $config );
@@ -404,5 +419,20 @@ final class POC_RTL_Product_Settings {
 		$clean = array_values( array_unique( $clean ) );
 
 		return empty( $clean ) ? self::default_config()['allowed_extensions'] : $clean;
+	}
+
+	/**
+	 * Check whether any print option is configured.
+	 *
+	 * @param array<string, mixed> $config Product config.
+	 */
+	private function has_print_options( array $config ): bool {
+		foreach ( self::option_fields() as $field ) {
+			if ( ! empty( poc_rtl_option_labels( $config[ $field ] ?? array() ) ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

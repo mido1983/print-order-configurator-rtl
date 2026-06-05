@@ -35,14 +35,14 @@ final class POC_RTL_Validation {
 		}
 
 		if ( ! $this->has_valid_nonce() ) {
-			wc_add_notice( __( 'אירעה שגיאה באימות הטופס. רעננו את העמוד ונסו שוב.', 'print-order-configurator-rtl' ), 'error' );
+			wc_add_notice( poc_rtl_ui_text( 'משהו בטופס לא אומת. רעננו את העמוד ונסו שוב.', 'The form could not be verified. Please refresh and try again.', 'site' ), 'error' );
 			return false;
 		}
 
 		$payload = $this->posted_payload();
 
 		if ( empty( $payload ) ) {
-			wc_add_notice( __( 'יש למלא את פרטי הזמנת ההדפסה.', 'print-order-configurator-rtl' ), 'error' );
+			wc_add_notice( poc_rtl_ui_text( 'כדי להמשיך, צריך למלא את פרטי הזמנת ההדפסה.', 'Please complete the print order details before continuing.', 'site' ), 'error' );
 			return false;
 		}
 
@@ -55,17 +55,17 @@ final class POC_RTL_Validation {
 		$design_mode = isset( $payload['design_mode'] ) ? sanitize_key( (string) $payload['design_mode'] ) : '';
 
 		if ( ! in_array( $design_mode, array( 'ready', 'need_design' ), true ) ) {
-			wc_add_notice( __( 'יש לבחור אם יש לכם עיצוב מוכן או שאתם צריכים עיצוב מהדפוס.', 'print-order-configurator-rtl' ), 'error' );
+			wc_add_notice( poc_rtl_ui_text( 'בחרו אם יש לכם עיצוב מוכן או שאתם צריכים עיצוב מהדפוס.', 'Choose whether you have a ready design or need design service.', 'site' ), 'error' );
 			return false;
 		}
 
 		if ( 'need_design' === $design_mode && ( ! POC_RTL_Settings::enabled( 'pocrtl_design_service_enabled_global' ) || empty( $config['design_service_enabled'] ) ) ) {
-			wc_add_notice( __( 'שירות עיצוב אינו זמין למוצר הזה.', 'print-order-configurator-rtl' ), 'error' );
+			wc_add_notice( poc_rtl_ui_text( 'שירות עיצוב לא זמין למוצר הזה. אפשר להעלות עיצוב מוכן.', 'Design service is not available for this product. You can upload ready files.', 'site' ), 'error' );
 			return false;
 		}
 
 		if ( 'ready' === $design_mode && 0 === $this->count_uploaded_files( 'poc_rtl_ready_files' ) ) {
-			wc_add_notice( __( 'בחרתם שיש לכם עיצוב מוכן, לכן יש להעלות לפחות קובץ אחד.', 'print-order-configurator-rtl' ), 'error' );
+			wc_add_notice( poc_rtl_ui_text( 'בחרתם שיש לכם עיצוב מוכן. נא להעלות לפחות קובץ אחד.', 'You selected ready design. Please upload at least one file.', 'site' ), 'error' );
 			return false;
 		}
 
@@ -126,7 +126,7 @@ final class POC_RTL_Validation {
 				wc_add_notice(
 					sprintf(
 						/* translators: %s: option label */
-						__( 'יש לבחור %s.', 'print-order-configurator-rtl' ),
+						poc_rtl_ui_text( 'נא לבחור %s.', 'Please choose %s.', 'site' ),
 						$label
 					),
 					'error'
@@ -135,7 +135,7 @@ final class POC_RTL_Validation {
 			}
 
 			if ( ! in_array( $value, poc_rtl_option_labels( $allowed ), true ) ) {
-				wc_add_notice( __( 'נבחרה אפשרות שאינה זמינה למוצר הזה.', 'print-order-configurator-rtl' ), 'error' );
+				wc_add_notice( poc_rtl_ui_text( 'אחת האפשרויות שנבחרו כבר לא זמינה למוצר הזה. רעננו ובחרו שוב.', 'One selected option is no longer available. Please refresh and choose again.', 'site' ), 'error' );
 				return false;
 			}
 		}
@@ -164,7 +164,7 @@ final class POC_RTL_Validation {
 				wc_add_notice(
 					sprintf(
 						/* translators: %s: field label */
-						__( 'יש למלא %s כדי לבקש עיצוב מהדפוס.', 'print-order-configurator-rtl' ),
+						poc_rtl_ui_text( 'כדי שנוכל להכין עיצוב, נא למלא %s.', 'To prepare a design, please fill in %s.', 'site' ),
 						$label
 					),
 					'error'
