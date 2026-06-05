@@ -1,0 +1,56 @@
+.poc-rtl-admin-order {
+	direction: rtl;
+	text-align: right;
+}
+
+.poc-rtl-admin-status {
+	align-items: center;
+	display: flex;
+	gap: 10px;
+	margin: 0 0 18px;
+}
+
+.poc-rtl-admin-item {
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	margin: 0 0 16px;
+	padding: 14px;
+}
+
+.poc-rtl-admin-item h3 {
+	margin: 0 0 10px;
+}
+
+.poc-rtl-admin-item h4 {
+	margin: 16px 0 8px;
+}
+
+.poc-rtl-admin-list {
+	display: grid;
+	gap: 8px 14px;
+	grid-template-columns: max-content minmax(0, 1fr);
+	margin: 0;
+}
+
+.poc-rtl-admin-list dt {
+	font-weight: 700;
+}
+
+.poc-rtl-admin-list dd {
+	margin: 0;
+	white-space: pre-wrap;
+}
+
+.poc-rtl-admin-text {
+	white-space: pre-wrap;
+}
+
+.poc-rtl-admin-files {
+	margin: 0;
+}
+
+.poc-rtl-admin-files li {
+	display: flex;
+	gap: 8px;
+	margin: 0 0 6px;
+}
