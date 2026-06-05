@@ -83,20 +83,24 @@ final class POC_RTL_Product_Settings {
 		$enabled = 'yes' === get_post_meta( $post->ID, self::META_ENABLED, true );
 		?>
 		<div id="poc_rtl_product_data" class="panel woocommerce_options_panel">
-			<div class="options_group">
+			<div class="options_group poc-rtl-product-section">
+				<h3><?php echo poc_rtl_esc_html( 'הגדרות כלליות', 'General settings', 'user' ); ?></h3>
+				<p class="poc-rtl-section-help"><?php echo poc_rtl_esc_html( 'הפעילו את הקונפיגורטור רק למוצרים שבהם הלקוח צריך לבחור אפשרויות הדפסה.', 'Enable the configurator only for products where customers need print options.', 'user' ); ?></p>
 				<?php
 				woocommerce_wp_checkbox(
 					array(
 						'id'          => self::META_ENABLED,
-						'label'       => __( 'Enable print configurator', 'print-order-configurator-rtl' ),
-						'description' => __( 'Show the RTL print order configurator on this product.', 'print-order-configurator-rtl' ),
+						'label'       => poc_rtl_ui_text( 'הפעל קונפיגורטור הדפסה', 'Enable print configurator', 'user' ),
+						'description' => poc_rtl_ui_text( 'הציגו ללקוח תהליך בחירה מסודר בעמוד המוצר.', 'Show a guided print order flow on this product page.', 'user' ),
 						'value'       => $enabled ? 'yes' : 'no',
 					)
 				);
 				?>
 			</div>
 
-			<div class="options_group">
+			<div class="options_group poc-rtl-product-section">
+				<h3><?php echo poc_rtl_esc_html( 'אפשרויות הדפסה', 'Printing options', 'user' ); ?></h3>
+				<p class="poc-rtl-section-help"><?php echo poc_rtl_esc_html( 'הגדירו רק אפשרויות אמיתיות וברורות. הלקוח לא יקליד ערכים תפעוליים ידנית.', 'Define only real, clear options. Customers will not type operational values manually.', 'user' ); ?></p>
 				<?php
 				$this->render_repeatable_field( 'sizes', poc_rtl_ui_text( 'מידות זמינות', 'Available sizes', 'user' ), $config );
 				$this->render_repeatable_field( 'quantities', poc_rtl_ui_text( 'כמויות זמינות', 'Available quantities', 'user' ), $config );
@@ -112,13 +116,15 @@ final class POC_RTL_Product_Settings {
 				</p>
 			</div>
 
-			<div class="options_group">
+			<div class="options_group poc-rtl-product-section">
+				<h3><?php echo poc_rtl_esc_html( 'שירות עיצוב', 'Design service', 'user' ); ?></h3>
+				<p class="poc-rtl-section-help"><?php echo poc_rtl_esc_html( 'אם הלקוח צריך עיצוב, התוסף יאסוף בריף וקבצי השראה. העיצוב עדיין מבוצע ידנית על ידי הצוות.', 'When customers need design, the plugin collects a brief and references. Design work remains manual.', 'user' ); ?></p>
 				<?php
 				woocommerce_wp_checkbox(
 					array(
 						'id'          => 'poc_rtl_design_service_enabled',
-						'label'       => __( 'Enable design service request', 'print-order-configurator-rtl' ),
-						'description' => __( 'Allow customers to request manual design service for this product.', 'print-order-configurator-rtl' ),
+						'label'       => poc_rtl_ui_text( 'אפשר בקשת עיצוב למוצר הזה', 'Allow design service request for this product', 'user' ),
+						'description' => poc_rtl_ui_text( 'מומלץ למוצרים שבהם בית הדפוס יכול להכין עיצוב לפי בריף.', 'Use when the shop can prepare design from a customer brief.', 'user' ),
 						'value'       => ! empty( $config['design_service_enabled'] ) ? 'yes' : 'no',
 					)
 				);
@@ -126,7 +132,7 @@ final class POC_RTL_Product_Settings {
 				woocommerce_wp_text_input(
 					array(
 						'id'                => 'poc_rtl_design_service_fee',
-						'label'             => __( 'Design service fee', 'print-order-configurator-rtl' ),
+						'label'             => poc_rtl_ui_text( 'עלות שירות עיצוב', 'Design service fee', 'user' ),
 						'type'              => 'number',
 						'value'             => $config['design_service_fee'],
 						'custom_attributes' => array(
@@ -138,12 +144,14 @@ final class POC_RTL_Product_Settings {
 				?>
 			</div>
 
-			<div class="options_group">
+			<div class="options_group poc-rtl-product-section">
+				<h3><?php echo poc_rtl_esc_html( 'העלאות קבצים', 'Uploads', 'user' ); ?></h3>
+				<p class="poc-rtl-section-help"><?php echo poc_rtl_esc_html( 'קבעו כמה קבצים מותר להעלות ואילו סוגים מותרים. קבצים מסוכנים ייחסמו בכל מקרה.', 'Set how many files can be uploaded and which types are allowed. Dangerous files are always blocked.', 'user' ); ?></p>
 				<?php
 				woocommerce_wp_text_input(
 					array(
 						'id'                => 'poc_rtl_max_files',
-						'label'             => __( 'Maximum files', 'print-order-configurator-rtl' ),
+						'label'             => poc_rtl_ui_text( 'מספר קבצים מקסימלי', 'Maximum files', 'user' ),
 						'type'              => 'number',
 						'value'             => $config['max_files'],
 						'custom_attributes' => array(
@@ -156,7 +164,7 @@ final class POC_RTL_Product_Settings {
 				woocommerce_wp_text_input(
 					array(
 						'id'                => 'poc_rtl_max_file_size_mb',
-						'label'             => __( 'Maximum file size MB', 'print-order-configurator-rtl' ),
+						'label'             => poc_rtl_ui_text( 'גודל קובץ מקסימלי MB', 'Maximum file size MB', 'user' ),
 						'type'              => 'number',
 						'value'             => $config['max_file_size_mb'],
 						'custom_attributes' => array(
@@ -169,9 +177,9 @@ final class POC_RTL_Product_Settings {
 				woocommerce_wp_text_input(
 					array(
 						'id'          => 'poc_rtl_allowed_extensions',
-						'label'       => __( 'Allowed file extensions', 'print-order-configurator-rtl' ),
+						'label'       => poc_rtl_ui_text( 'סיומות קבצים מותרות', 'Allowed file extensions', 'user' ),
 						'value'       => implode( ', ', $config['allowed_extensions'] ),
-						'description' => __( 'Comma-separated list. Dangerous executable extensions are always rejected.', 'print-order-configurator-rtl' ),
+						'description' => poc_rtl_ui_text( 'רשימה מופרדת בפסיקים. קבצי הרצה מסוכנים תמיד ייחסמו.', 'Comma-separated list. Dangerous executable files are always rejected.', 'user' ),
 					)
 				);
 				?>
