@@ -1,0 +1,94 @@
+.poc-rtl-configurator {
+	border: 1px solid #d9d9d9;
+	border-radius: 8px;
+	direction: rtl;
+	margin: 24px 0;
+	padding: 18px;
+	text-align: right;
+}
+
+.poc-rtl-title {
+	font-size: 1.25rem;
+	line-height: 1.35;
+	margin: 0 0 16px;
+}
+
+.poc-rtl-grid {
+	display: grid;
+	gap: 14px;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	margin-bottom: 18px;
+}
+
+.poc-rtl-field,
+.poc-rtl-panel label {
+	display: grid;
+	font-weight: 600;
+	gap: 6px;
+}
+
+.poc-rtl-configurator input,
+.poc-rtl-configurator select,
+.poc-rtl-configurator textarea {
+	box-sizing: border-box;
+	direction: rtl;
+	max-width: 100%;
+	text-align: right;
+	width: 100%;
+}
+
+.poc-rtl-configurator input[type="email"],
+.poc-rtl-configurator input[type="tel"] {
+	direction: ltr;
+	text-align: right;
+}
+
+.poc-rtl-workflow {
+	border: 0;
+	display: grid;
+	gap: 10px;
+	margin: 0 0 18px;
+	padding: 0;
+}
+
+.poc-rtl-workflow legend {
+	font-weight: 700;
+	margin-bottom: 8px;
+}
+
+.poc-rtl-choice {
+	align-items: start;
+	border: 1px solid #d9d9d9;
+	border-radius: 8px;
+	cursor: pointer;
+	display: grid;
+	gap: 10px;
+	grid-template-columns: auto 1fr;
+	padding: 12px;
+}
+
+.poc-rtl-choice input {
+	margin-top: 4px;
+	width: auto;
+}
+
+.poc-rtl-fee {
+	display: inline-block;
+	font-weight: 700;
+	margin-inline-start: 8px;
+}
+
+.poc-rtl-panel {
+	display: grid;
+	gap: 14px;
+}
+
+@media (max-width: 640px) {
+	.poc-rtl-configurator {
+		padding: 14px;
+	}
+
+	.poc-rtl-grid {
+		grid-template-columns: 1fr;
+	}
+}
