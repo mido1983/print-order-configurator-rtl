@@ -30,6 +30,19 @@ define( 'POC_RTL_BASENAME', plugin_basename( __FILE__ ) );
 require_once POC_RTL_PATH . 'includes/helpers.php';
 require_once POC_RTL_PATH . 'includes/class-plugin.php';
 
+add_action(
+	'before_woocommerce_init',
+	static function (): void {
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+				'custom_order_tables',
+				__FILE__,
+				true
+			);
+		}
+	}
+);
+
 register_activation_hook( __FILE__, array( 'POC_RTL_Plugin', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'POC_RTL_Plugin', 'deactivate' ) );
 
