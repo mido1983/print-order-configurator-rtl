@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Improved frontend configurator layout.
+- Added GitHub-based update support.
+
 ## 0.1.0
 
 - Initial MVP implementation:

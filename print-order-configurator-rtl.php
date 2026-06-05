@@ -3,7 +3,7 @@
  * Plugin Name: Print Order Configurator RTL for WooCommerce
  * Plugin URI: https://github.com/mido1983/print-order-configurator-rtl
  * Description: RTL-first structured print order workflow configurator for WooCommerce.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Print Order Configurator RTL Contributors
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -21,11 +21,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'POC_RTL_VERSION', '0.1.0' );
+define( 'POC_RTL_VERSION', '0.1.1' );
 define( 'POC_RTL_FILE', __FILE__ );
 define( 'POC_RTL_PATH', plugin_dir_path( __FILE__ ) );
 define( 'POC_RTL_URL', plugin_dir_url( __FILE__ ) );
 define( 'POC_RTL_BASENAME', plugin_basename( __FILE__ ) );
+
+define( 'POCRTL_VERSION', POC_RTL_VERSION );
+define( 'POCRTL_PLUGIN_FILE', __FILE__ );
+define( 'POCRTL_GITHUB_REPO', 'mido1983/print-order-configurator-rtl' );
+define( 'POCRTL_GITHUB_API_URL', 'https://api.github.com/repos/mido1983/print-order-configurator-rtl/releases/latest' );
 
 require_once POC_RTL_PATH . 'includes/helpers.php';
 require_once POC_RTL_PATH . 'includes/class-plugin.php';

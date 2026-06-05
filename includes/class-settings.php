@@ -83,6 +83,7 @@ final class POC_RTL_Settings {
 				<?php $this->render_workflow_section( $settings ); ?>
 				<?php $this->render_display_section( $settings ); ?>
 				<?php $this->render_security_section( $settings ); ?>
+				<?php $this->render_github_updates_section( $settings ); ?>
 
 				<?php submit_button( __( 'שמור הגדרות', 'print-order-configurator-rtl' ) ); ?>
 			</form>
@@ -226,6 +227,10 @@ final class POC_RTL_Settings {
 			'pocrtl_admin_panel_direction'          => 'rtl',
 			'pocrtl_allow_svg_uploads'              => 'no',
 			'pocrtl_protect_admin_downloads'        => 'yes',
+			'pocrtl_github_updates_enabled'         => 'yes',
+			'pocrtl_github_repo'                    => POCRTL_GITHUB_REPO,
+			'pocrtl_github_update_channel'          => 'stable',
+			'pocrtl_github_token'                   => '',
 		);
 	}
 
@@ -248,6 +253,7 @@ final class POC_RTL_Settings {
 			'pocrtl_show_config_in_emails',
 			'pocrtl_allow_svg_uploads',
 			'pocrtl_protect_admin_downloads',
+			'pocrtl_github_updates_enabled',
 		);
 
 		if ( in_array( $key, $checkboxes, true ) ) {
@@ -263,6 +269,9 @@ final class POC_RTL_Settings {
 			'pocrtl_default_design_service_price' => wc_format_decimal( $value ?? 0 ),
 			'pocrtl_upload_directory' => sanitize_file_name( (string) $value ) ?: $default,
 			'pocrtl_workflow_statuses' => implode( "\n", poc_rtl_sanitize_option_lines( (string) $value ) ),
+			'pocrtl_github_repo' => $this->sanitize_github_repo( (string) $value, (string) $default ),
+			'pocrtl_github_update_channel' => 'stable',
+			'pocrtl_github_token' => '' === (string) $value ? (string) get_option( 'pocrtl_github_token', '' ) : sanitize_text_field( (string) $value ),
 			default => sanitize_text_field( (string) $value ),
 		};
 	}
@@ -395,6 +404,20 @@ final class POC_RTL_Settings {
 	}
 
 	/**
+	 * Render GitHub updates section.
+	 *
+	 * @param array<string, mixed> $settings Settings.
+	 */
+	private function render_github_updates_section( array $settings ): void {
+		$this->open_section( __( 'GitHub Updates', 'print-order-configurator-rtl' ) );
+		$this->checkbox( 'pocrtl_github_updates_enabled', __( 'Enable GitHub updates', 'print-order-configurator-rtl' ), $settings, __( 'Check GitHub releases and show WordPress plugin updates when a newer release is available.', 'print-order-configurator-rtl' ) );
+		$this->text( 'pocrtl_github_repo', __( 'GitHub repository', 'print-order-configurator-rtl' ), $settings, __( 'Format: owner/repository. Public repositories do not need a token.', 'print-order-configurator-rtl' ) );
+		$this->select( 'pocrtl_github_update_channel', __( 'Update channel', 'print-order-configurator-rtl' ), $settings, array( 'stable' => 'stable' ) );
+		$this->password( 'pocrtl_github_token', __( 'GitHub token', 'print-order-configurator-rtl' ), __( 'Optional. Use only for private repositories. The token is stored but never displayed.', 'print-order-configurator-rtl' ) );
+		$this->close_section();
+	}
+
+	/**
 	 * Open a settings section.
 	 *
 	 * @param string $title Section title.
@@ -523,6 +546,37 @@ final class POC_RTL_Settings {
 			</td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * Render password field.
+	 *
+	 * @param string $key Setting key.
+	 * @param string $label Label.
+	 * @param string $description Description.
+	 */
+	private function password( string $key, string $label, string $description = '' ): void {
+		?>
+		<tr>
+			<th scope="row"><label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
+			<td>
+				<input class="regular-text" id="<?php echo esc_attr( $key ); ?>" type="password" name="<?php echo esc_attr( $key ); ?>" value="" autocomplete="new-password" placeholder="<?php echo esc_attr__( 'Leave blank to keep existing token', 'print-order-configurator-rtl' ); ?>">
+				<?php $this->description( $description ); ?>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Sanitize GitHub repository setting.
+	 *
+	 * @param string $repo Raw repository.
+	 * @param string $default Default repository.
+	 */
+	private function sanitize_github_repo( string $repo, string $default ): string {
+		$repo = trim( $repo );
+
+		return preg_match( '/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/', $repo ) ? $repo : $default;
 	}
 
 	/**

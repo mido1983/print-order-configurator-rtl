@@ -81,6 +81,7 @@ final class POC_RTL_Plugin {
 		require_once POC_RTL_PATH . 'includes/class-pricing.php';
 		require_once POC_RTL_PATH . 'includes/class-statuses.php';
 		require_once POC_RTL_PATH . 'includes/class-admin-order.php';
+		require_once POC_RTL_PATH . 'includes/class-github-updater.php';
 	}
 
 	/**
@@ -96,6 +97,7 @@ final class POC_RTL_Plugin {
 		( new POC_RTL_Order() )->init();
 		( new POC_RTL_Pricing() )->init();
 		( new POC_RTL_Admin_Order() )->init();
+		( new POC_RTL_GitHub_Updater() )->init();
 	}
 
 	/**
