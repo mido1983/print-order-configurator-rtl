@@ -77,6 +77,7 @@ final class POC_RTL_Plugin {
 		require_once POC_RTL_PATH . 'includes/class-validation.php';
 		require_once POC_RTL_PATH . 'includes/class-cart.php';
 		require_once POC_RTL_PATH . 'includes/class-order.php';
+		require_once POC_RTL_PATH . 'includes/class-pricing.php';
 	}
 
 	/**
@@ -89,6 +90,7 @@ final class POC_RTL_Plugin {
 		( new POC_RTL_Validation() )->init();
 		( new POC_RTL_Cart() )->init();
 		( new POC_RTL_Order() )->init();
+		( new POC_RTL_Pricing() )->init();
 	}
 
 	/**

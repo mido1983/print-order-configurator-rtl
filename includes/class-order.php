@@ -72,6 +72,10 @@ final class POC_RTL_Order {
 			}
 		}
 
+		if ( 'need_design' === ( $data['design_mode'] ?? '' ) && ! empty( $data['design_service_fee'] ) ) {
+			$item->add_meta_data( __( 'עלות שירות עיצוב', 'print-order-configurator-rtl' ), wc_price( (float) $data['design_service_fee'] ), true );
+		}
+
 		if ( ! empty( $data['files'] ) && is_array( $data['files'] ) ) {
 			foreach ( $data['files'] as $group => $files ) {
 				if ( ! is_array( $files ) || empty( $files ) ) {

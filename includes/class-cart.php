@@ -98,6 +98,13 @@ final class POC_RTL_Cart {
 			}
 		}
 
+		if ( 'need_design' === ( $data['design_mode'] ?? '' ) && ! empty( $data['design_service_fee'] ) ) {
+			$item_data[] = array(
+				'key'   => __( 'עלות שירות עיצוב', 'print-order-configurator-rtl' ),
+				'value' => wc_price( (float) $data['design_service_fee'] ),
+			);
+		}
+
 		if ( ! empty( $data['files'] ) && is_array( $data['files'] ) ) {
 			foreach ( $data['files'] as $group => $files ) {
 				if ( ! is_array( $files ) || empty( $files ) ) {
