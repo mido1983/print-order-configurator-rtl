@@ -1,0 +1,28 @@
+=== Print Order Configurator RTL for WooCommerce ===
+Contributors: mido1983
+Tags: woocommerce, rtl, hebrew, print, uploads
+Requires at least: 6.5
+Tested up to: 6.8
+Requires PHP: 8.1
+Stable tag: 0.1.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+RTL-first structured print order workflow configurator for WooCommerce.
+
+== Description ==
+
+Print Order Configurator RTL for WooCommerce helps print shops collect structured print order options, design workflow choices, instructions, and files in Hebrew RTL storefronts.
+
+This plugin is not a visual product designer and does not render print-ready artwork in the browser.
+
+== Installation ==
+
+1. Upload the plugin folder to `/wp-content/plugins/`.
+2. Activate WooCommerce.
+3. Activate this plugin.
+
+== Changelog ==
+
+= 0.1.0 =
+Initial development scaffold.
