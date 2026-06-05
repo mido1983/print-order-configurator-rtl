@@ -83,6 +83,88 @@
 	gap: 14px;
 }
 
+.poc-rtl-upload {
+	display: grid;
+	gap: 8px;
+}
+
+.poc-rtl-upload-label {
+	font-weight: 700;
+}
+
+.poc-rtl-upload-input {
+	height: 1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	width: 1px;
+}
+
+.poc-rtl-upload-dropzone {
+	align-items: center;
+	background: #f8fafc;
+	border: 2px dashed #94a3b8;
+	border-radius: 8px;
+	cursor: pointer;
+	display: grid;
+	gap: 6px;
+	justify-items: center;
+	min-height: 132px;
+	padding: 18px;
+	text-align: center;
+	transition: background 160ms ease, border-color 160ms ease;
+}
+
+.poc-rtl-upload-dropzone:hover,
+.poc-rtl-upload-input:focus + .poc-rtl-upload-list,
+.poc-rtl-upload:focus-within .poc-rtl-upload-dropzone {
+	background: #eef6ff;
+	border-color: #2563eb;
+}
+
+.poc-rtl-upload-icon {
+	align-items: center;
+	background: #2563eb;
+	border-radius: 999px;
+	color: #fff;
+	display: inline-flex;
+	font-size: 24px;
+	font-weight: 700;
+	height: 42px;
+	justify-content: center;
+	line-height: 1;
+	width: 42px;
+}
+
+.poc-rtl-upload-prompt {
+	color: #0f172a;
+	font-size: 1rem;
+	font-weight: 700;
+}
+
+.poc-rtl-upload-hint {
+	color: #64748b;
+	font-size: 0.875rem;
+	font-weight: 500;
+}
+
+.poc-rtl-upload-list {
+	display: grid;
+	gap: 6px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.poc-rtl-upload-list li {
+	background: #fff;
+	border: 1px solid #dbe3ea;
+	border-radius: 6px;
+	color: #334155;
+	font-size: 0.9rem;
+	padding: 8px 10px;
+}
+
 @media (max-width: 640px) {
 	.poc-rtl-configurator {
 		padding: 14px;

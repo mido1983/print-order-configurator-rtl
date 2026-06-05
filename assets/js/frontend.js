@@ -11,6 +11,25 @@
 		});
 	}
 
+	function syncUploadList(input) {
+		var upload = input.closest('[data-poc-rtl-upload]');
+		var list = upload ? upload.querySelector('[data-poc-rtl-upload-list]') : null;
+
+		if (!list) {
+			return;
+		}
+
+		list.innerHTML = '';
+
+		Array.prototype.forEach.call(input.files || [], function (file) {
+			var item = document.createElement('li');
+			var size = file.size ? ' · ' + Math.ceil(file.size / 1024) + ' KB' : '';
+
+			item.textContent = file.name + size;
+			list.appendChild(item);
+		});
+	}
+
 	document.addEventListener('change', function (event) {
 		if (!event.target.matches('input[name="poc_rtl[design_mode]"]')) {
 			return;
@@ -21,6 +40,14 @@
 		if (configurator) {
 			syncPanels(configurator);
 		}
+	});
+
+	document.addEventListener('change', function (event) {
+		if (!event.target.matches('.poc-rtl-upload-input')) {
+			return;
+		}
+
+		syncUploadList(event.target);
 	});
 
 	document.querySelectorAll('.poc-rtl-configurator').forEach(syncPanels);

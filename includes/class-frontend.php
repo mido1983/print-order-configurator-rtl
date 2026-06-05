@@ -69,7 +69,7 @@ final class POC_RTL_Frontend {
 		?>
 		<section class="poc-rtl-configurator" dir="<?php echo esc_attr( $dir ); ?>" lang="<?php echo esc_attr( $lang ); ?>" aria-labelledby="poc-rtl-title">
 			<?php wp_nonce_field( 'poc_rtl_add_to_cart', 'poc_rtl_nonce' ); ?>
-			<h2 id="poc-rtl-title" class="poc-rtl-title"><?php esc_html_e( 'פרטי הזמנת הדפסה', 'print-order-configurator-rtl' ); ?></h2>
+			<h2 id="poc-rtl-title" class="poc-rtl-title"><?php echo poc_rtl_esc_html( 'פרטי הזמנת הדפסה', 'Print order details', 'site' ); ?></h2>
 
 			<div class="poc-rtl-grid">
 				<?php
@@ -85,7 +85,7 @@ final class POC_RTL_Frontend {
 			</div>
 
 			<fieldset class="poc-rtl-workflow">
-				<legend><?php esc_html_e( 'מה מצב העיצוב?', 'print-order-configurator-rtl' ); ?></legend>
+				<legend><?php echo poc_rtl_esc_html( 'מה מצב העיצוב?', 'What is the design status?', 'site' ); ?></legend>
 
 				<label class="poc-rtl-choice">
 					<input type="radio" name="poc_rtl[design_mode]" value="ready" checked>
@@ -114,11 +114,19 @@ final class POC_RTL_Frontend {
 			</fieldset>
 
 			<div class="poc-rtl-panel" data-poc-rtl-panel="ready">
-				<label for="poc-rtl-production-notes"><?php esc_html_e( 'הערות להפקה', 'print-order-configurator-rtl' ); ?></label>
-				<textarea id="poc-rtl-production-notes" name="poc_rtl[production_notes]" rows="4" placeholder="<?php esc_attr_e( 'לדוגמה: שלום Michael Design 054-1234567', 'print-order-configurator-rtl' ); ?>"></textarea>
+				<label for="poc-rtl-production-notes"><?php echo poc_rtl_esc_html( 'הערות להפקה', 'Production notes', 'site' ); ?></label>
+				<textarea id="poc-rtl-production-notes" name="poc_rtl[production_notes]" rows="4" placeholder="<?php echo poc_rtl_esc_attr( 'לדוגמה: שלום Michael Design 054-1234567', 'Example: Shalom Michael Design 054-1234567', 'site' ); ?>"></textarea>
 
-				<label for="poc-rtl-ready-files"><?php esc_html_e( 'קבצים מוכנים להדפסה', 'print-order-configurator-rtl' ); ?></label>
-				<input id="poc-rtl-ready-files" type="file" name="poc_rtl_ready_files[]"<?php echo $multiple_uploads ? ' multiple' : ''; ?> accept="<?php echo esc_attr( $accept ); ?>">
+				<?php
+				$this->render_upload_control(
+					'poc-rtl-ready-files',
+					'poc_rtl_ready_files[]',
+					poc_rtl_ui_text( 'קבצים מוכנים להדפסה', 'Ready print files', 'site' ),
+					poc_rtl_ui_text( 'גררו קבצים לכאן או לחצו להעלאה', 'Drag files here or click to upload', 'site' ),
+					$accept,
+					$multiple_uploads
+				);
+				?>
 			</div>
 
 			<div class="poc-rtl-panel" data-poc-rtl-panel="need_design" hidden>
@@ -133,17 +141,25 @@ final class POC_RTL_Frontend {
 					?>
 				</div>
 
-				<label for="poc-rtl-design-text"><?php esc_html_e( 'טקסט לעיצוב', 'print-order-configurator-rtl' ); ?></label>
+				<label for="poc-rtl-design-text"><?php echo poc_rtl_esc_html( 'טקסט לעיצוב', 'Design text', 'site' ); ?></label>
 				<textarea id="poc-rtl-design-text" name="poc_rtl[brief][design_text]" rows="5"></textarea>
 
-				<label for="poc-rtl-design-references"><?php esc_html_e( 'רפרנסים והשראה', 'print-order-configurator-rtl' ); ?></label>
+				<label for="poc-rtl-design-references"><?php echo poc_rtl_esc_html( 'רפרנסים והשראה', 'References and inspiration', 'site' ); ?></label>
 				<textarea id="poc-rtl-design-references" name="poc_rtl[brief][references]" rows="4"></textarea>
 
-				<label for="poc-rtl-design-notes"><?php esc_html_e( 'הערות נוספות', 'print-order-configurator-rtl' ); ?></label>
+				<label for="poc-rtl-design-notes"><?php echo poc_rtl_esc_html( 'הערות נוספות', 'Additional notes', 'site' ); ?></label>
 				<textarea id="poc-rtl-design-notes" name="poc_rtl[brief][notes]" rows="4"></textarea>
 
-				<label for="poc-rtl-brief-files"><?php esc_html_e( 'לוגואים, תמונות וקבצי השראה', 'print-order-configurator-rtl' ); ?></label>
-				<input id="poc-rtl-brief-files" type="file" name="poc_rtl_brief_files[]"<?php echo $multiple_uploads ? ' multiple' : ''; ?> accept="<?php echo esc_attr( $accept ); ?>">
+				<?php
+				$this->render_upload_control(
+					'poc-rtl-brief-files',
+					'poc_rtl_brief_files[]',
+					poc_rtl_ui_text( 'לוגואים, תמונות וקבצי השראה', 'Logos, photos, and reference files', 'site' ),
+					poc_rtl_ui_text( 'גררו לוגואים ותמונות לכאן או לחצו להעלאה', 'Drag logos and images here or click to upload', 'site' ),
+					$accept,
+					$multiple_uploads
+				);
+				?>
 			</div>
 		</section>
 		<?php
@@ -166,7 +182,7 @@ final class POC_RTL_Frontend {
 		<label class="poc-rtl-field">
 			<span><?php echo esc_html( $label ); ?></span>
 			<select name="poc_rtl[options][<?php echo esc_attr( $field ); ?>]">
-				<option value=""><?php esc_html_e( 'בחרו אפשרות', 'print-order-configurator-rtl' ); ?></option>
+				<option value=""><?php echo poc_rtl_esc_html( 'בחרו אפשרות', 'Choose an option', 'site' ); ?></option>
 				<?php foreach ( $options as $option ) : ?>
 					<option value="<?php echo esc_attr( (string) $option ); ?>"><?php echo esc_html( (string) $option ); ?></option>
 				<?php endforeach; ?>
@@ -188,6 +204,31 @@ final class POC_RTL_Frontend {
 			<span><?php echo esc_html( $label ); ?></span>
 			<input type="<?php echo esc_attr( $type ); ?>" name="poc_rtl[brief][<?php echo esc_attr( $field ); ?>]">
 		</label>
+		<?php
+	}
+
+	/**
+	 * Render custom upload control.
+	 *
+	 * @param string $id Input ID.
+	 * @param string $name Input name.
+	 * @param string $label Control label.
+	 * @param string $prompt Upload prompt.
+	 * @param string $accept Accept attribute.
+	 * @param bool   $multiple Whether multiple files are allowed.
+	 */
+	private function render_upload_control( string $id, string $name, string $label, string $prompt, string $accept, bool $multiple ): void {
+		?>
+		<div class="poc-rtl-upload" data-poc-rtl-upload>
+			<label class="poc-rtl-upload-label" for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
+			<label class="poc-rtl-upload-dropzone" for="<?php echo esc_attr( $id ); ?>">
+				<span class="poc-rtl-upload-icon" aria-hidden="true">+</span>
+				<span class="poc-rtl-upload-prompt"><?php echo esc_html( $prompt ); ?></span>
+				<span class="poc-rtl-upload-hint"><?php echo poc_rtl_esc_html( 'הקבצים שנבחרו יוצגו כאן לפני ההוספה לעגלה', 'Selected files will appear here before adding to cart', 'site' ); ?></span>
+			</label>
+			<input id="<?php echo esc_attr( $id ); ?>" class="poc-rtl-upload-input" type="file" name="<?php echo esc_attr( $name ); ?>"<?php echo $multiple ? ' multiple' : ''; ?> accept="<?php echo esc_attr( $accept ); ?>">
+			<ul class="poc-rtl-upload-list" data-poc-rtl-upload-list aria-live="polite"></ul>
+		</div>
 		<?php
 	}
 

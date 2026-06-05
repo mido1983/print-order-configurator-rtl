@@ -54,3 +54,53 @@ function poc_rtl_option_lines_to_text( mixed $value ): string {
 
 	return implode( "\n", array_map( 'strval', $value ) );
 }
+
+/**
+ * Return whether the active site/admin locale is Hebrew.
+ *
+ * @param string $scope Locale scope: site, user, or auto.
+ */
+function poc_rtl_is_hebrew_locale( string $scope = 'auto' ): bool {
+	$locale = match ( $scope ) {
+		'user'  => function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale(),
+		'site'  => get_locale(),
+		default => is_admin() && function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale(),
+	};
+
+	return str_starts_with( strtolower( (string) $locale ), 'he' );
+}
+
+/**
+ * Locale-aware UI text fallback for untranslated installs.
+ *
+ * @param string $he Hebrew text.
+ * @param string $en English text.
+ * @param string $scope Locale scope: site, user, or auto.
+ */
+function poc_rtl_ui_text( string $he, string $en, string $scope = 'auto' ): string {
+	$text = poc_rtl_is_hebrew_locale( $scope ) ? $he : $en;
+
+	return translate( $text, 'print-order-configurator-rtl' );
+}
+
+/**
+ * Escape locale-aware UI text.
+ *
+ * @param string $he Hebrew text.
+ * @param string $en English text.
+ * @param string $scope Locale scope: site, user, or auto.
+ */
+function poc_rtl_esc_html( string $he, string $en, string $scope = 'auto' ): string {
+	return esc_html( poc_rtl_ui_text( $he, $en, $scope ) );
+}
+
+/**
+ * Escape locale-aware UI text for attributes.
+ *
+ * @param string $he Hebrew text.
+ * @param string $en English text.
+ * @param string $scope Locale scope: site, user, or auto.
+ */
+function poc_rtl_esc_attr( string $he, string $en, string $scope = 'auto' ): string {
+	return esc_attr( poc_rtl_ui_text( $he, $en, $scope ) );
+}
