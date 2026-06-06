@@ -98,6 +98,25 @@
 	order: 3;
 }
 
+.poc-rtl-cart-form .tp-product-details-action-item-wrapper,
+.product:has(.pocrtl-configurator) form.cart .tp-product-details-action-item-wrapper {
+	align-items: stretch !important;
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 14px;
+	width: 100%;
+}
+
+.poc-rtl-cart-form .tp-product-details-quantity,
+.poc-rtl-cart-form .tp-product-details-add-to-cart,
+.product:has(.pocrtl-configurator) form.cart .tp-product-details-quantity,
+.product:has(.pocrtl-configurator) form.cart .tp-product-details-add-to-cart {
+	display: block !important;
+	flex: 0 0 auto !important;
+	max-width: 100%;
+	width: 100% !important;
+}
+
 .poc-rtl-configurator-header {
 	background: #0f172a;
 	border-radius: 8px;

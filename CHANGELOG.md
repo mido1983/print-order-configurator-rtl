@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.5
+
+- Fixed PrintX product action flex wrapper layout so the configurator spans full width.
+- Kept the add-to-cart button below the configurator instead of beside it.
+
 ## 0.1.4
 
 - Replaced unreliable native print option dropdowns with lightweight RTL radio controls.
