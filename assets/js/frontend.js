@@ -83,7 +83,7 @@
 			var productRow = productColumn.parentElement;
 
 			if (productRow) {
-				productRow.querySelectorAll('.col-xl-6, .col-lg-6').forEach(function (column) {
+				productRow.querySelectorAll('.col-xl-6, .col-lg-6, .col-md-6').forEach(function (column) {
 					if (column !== productColumn) {
 						column.classList.add('pocrtl-gallery-column');
 					}

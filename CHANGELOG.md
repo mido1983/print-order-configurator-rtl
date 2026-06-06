@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.8
+
+- Added the remaining HOTFIX scoped frontend stabilization selectors.
+- Marked `.col-md-6` gallery columns when the configurator is active.
+- Added exact PrintX `.tp-product-details-action-item-wrapper.d-flex` override and option-grid aliases.
+- Preserved GitHub updater manual check and cache controls.
+
 ## 0.1.7
 
 - Added a scoped gallery column marker for PrintX product rows.
