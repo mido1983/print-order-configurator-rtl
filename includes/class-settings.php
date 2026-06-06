@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Global plugin settings.
  *
@@ -129,14 +129,30 @@ final class POC_RTL_Settings {
 	 * Render admin notices.
 	 */
 	public function render_admin_notices(): void {
-		if ( ! current_user_can( 'manage_woocommerce' ) || empty( $_GET['pocrtl_saved'] ) ) {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			return;
 		}
 
-		printf(
-			'<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-			esc_html__( 'הגדרות Print Configurator RTL נשמרו.', 'print-order-configurator-rtl' )
-		);
+		if ( ! empty( $_GET['pocrtl_saved'] ) ) {
+			printf(
+				'<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+				esc_html__( 'Print Configurator RTL settings saved.', 'print-order-configurator-rtl' )
+			);
+		}
+
+		if ( ! empty( $_GET['pocrtl_update_checked'] ) ) {
+			printf(
+				'<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+				esc_html__( 'GitHub update check completed.', 'print-order-configurator-rtl' )
+			);
+		}
+
+		if ( ! empty( $_GET['pocrtl_cache_cleared'] ) ) {
+			printf(
+				'<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+				esc_html__( 'GitHub update cache cleared.', 'print-order-configurator-rtl' )
+			);
+		}
 	}
 
 	/**
@@ -409,12 +425,100 @@ final class POC_RTL_Settings {
 	 * @param array<string, mixed> $settings Settings.
 	 */
 	private function render_github_updates_section( array $settings ): void {
+		$status          = class_exists( 'POC_RTL_GitHub_Updater' ) ? POC_RTL_GitHub_Updater::update_status() : array();
+		$current_version = POCRTL_VERSION;
+		$latest_version  = isset( $status['version'] ) ? (string) $status['version'] : __( 'Not checked yet', 'print-order-configurator-rtl' );
+		$checked_at      = ! empty( $status['checked_at'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $status['checked_at'] ) : __( 'Never', 'print-order-configurator-rtl' );
+		$check_url       = wp_nonce_url( admin_url( 'admin-post.php?action=pocrtl_check_updates' ), 'pocrtl_check_updates', 'pocrtl_update_nonce' );
+		$clear_url       = wp_nonce_url( admin_url( 'admin-post.php?action=pocrtl_clear_update_cache' ), 'pocrtl_clear_update_cache', 'pocrtl_update_nonce' );
+
 		$this->open_section( __( 'GitHub Updates', 'print-order-configurator-rtl' ) );
 		$this->checkbox( 'pocrtl_github_updates_enabled', __( 'Enable GitHub updates', 'print-order-configurator-rtl' ), $settings, __( 'Check GitHub releases and show WordPress plugin updates when a newer release is available.', 'print-order-configurator-rtl' ) );
 		$this->text( 'pocrtl_github_repo', __( 'GitHub repository', 'print-order-configurator-rtl' ), $settings, __( 'Format: owner/repository. Public repositories do not need a token.', 'print-order-configurator-rtl' ) );
 		$this->select( 'pocrtl_github_update_channel', __( 'Update channel', 'print-order-configurator-rtl' ), $settings, array( 'stable' => 'stable' ) );
 		$this->password( 'pocrtl_github_token', __( 'GitHub token', 'print-order-configurator-rtl' ), __( 'Optional. Use only for private repositories. The token is stored but never displayed.', 'print-order-configurator-rtl' ) );
+		?>
+		<tr>
+			<th scope="row"><?php esc_html_e( 'Current installed version', 'print-order-configurator-rtl' ); ?></th>
+			<td><code><?php echo esc_html( $current_version ); ?></code></td>
+		</tr>
+		<tr>
+			<th scope="row"><?php esc_html_e( 'Latest GitHub version', 'print-order-configurator-rtl' ); ?></th>
+			<td><code><?php echo esc_html( $latest_version ); ?></code></td>
+		</tr>
+		<tr>
+			<th scope="row"><?php esc_html_e( 'Last checked', 'print-order-configurator-rtl' ); ?></th>
+			<td><?php echo esc_html( $checked_at ); ?></td>
+		</tr>
+		<tr>
+			<th scope="row"><?php esc_html_e( 'Update status', 'print-order-configurator-rtl' ); ?></th>
+			<td><strong><?php echo esc_html( $this->github_update_status_label( $status, $current_version ) ); ?></strong></td>
+		</tr>
+		<tr>
+			<th scope="row"><?php esc_html_e( 'Manual update actions', 'print-order-configurator-rtl' ); ?></th>
+			<td>
+				<a class="button button-secondary" href="<?php echo esc_url( $check_url ); ?>"><?php esc_html_e( 'Check for updates now', 'print-order-configurator-rtl' ); ?></a>
+				<a class="button button-secondary" href="<?php echo esc_url( $clear_url ); ?>"><?php esc_html_e( 'Clear update cache', 'print-order-configurator-rtl' ); ?></a>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row"><?php esc_html_e( 'Debug information', 'print-order-configurator-rtl' ); ?></th>
+			<td><?php $this->render_github_debug_info( $status, (string) $settings['pocrtl_github_repo'] ); ?></td>
+		</tr>
+		<?php
 		$this->close_section();
+	}
+
+	/**
+	 * Human-readable update status.
+	 *
+	 * @param array<string,mixed> $status Status payload.
+	 * @param string              $current_version Current installed version.
+	 */
+	private function github_update_status_label( array $status, string $current_version ): string {
+		if ( empty( $status ) ) {
+			return __( 'Not checked yet', 'print-order-configurator-rtl' );
+		}
+
+		if ( empty( $status['ok'] ) ) {
+			return __( 'Error checking updates', 'print-order-configurator-rtl' );
+		}
+
+		$latest = isset( $status['version'] ) ? (string) $status['version'] : '';
+
+		if ( '' !== $latest && version_compare( $latest, $current_version, '>' ) ) {
+			return __( 'Update available', 'print-order-configurator-rtl' );
+		}
+
+		return __( 'Up to date', 'print-order-configurator-rtl' );
+	}
+
+	/**
+	 * Render non-sensitive GitHub update debug information.
+	 *
+	 * @param array<string,mixed> $status Status payload.
+	 * @param string              $repo GitHub repository.
+	 */
+	private function render_github_debug_info( array $status, string $repo ): void {
+		$repo_parts = explode( '/', $this->sanitize_github_repo( $repo, POCRTL_GITHUB_REPO ), 2 );
+		$api_url    = 'https://api.github.com/repos/' . rawurlencode( $repo_parts[0] ) . '/' . rawurlencode( $repo_parts[1] ) . '/releases/latest';
+		$rows       = array(
+			__( 'GitHub API URL', 'print-order-configurator-rtl' ) => $status['api_url'] ?? $api_url,
+			__( 'Last HTTP status', 'print-order-configurator-rtl' ) => $status['http_status'] ?? '',
+			__( 'Last error message', 'print-order-configurator-rtl' ) => $status['error'] ?? '',
+			__( 'Latest raw tag', 'print-order-configurator-rtl' ) => $status['raw_tag'] ?? '',
+			__( 'Parsed latest version', 'print-order-configurator-rtl' ) => $status['version'] ?? '',
+			__( 'Selected download URL', 'print-order-configurator-rtl' ) => $status['package'] ?? '',
+		);
+
+		echo '<dl>';
+
+		foreach ( $rows as $label => $value ) {
+			echo '<dt><strong>' . esc_html( (string) $label ) . '</strong></dt>';
+			echo '<dd><code>' . esc_html( (string) $value ) . '</code></dd>';
+		}
+
+		echo '</dl>';
 	}
 
 	/**

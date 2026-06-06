@@ -5,6 +5,7 @@
 - Added a scoped gallery column marker for PrintX product rows.
 - Rebalanced desktop layout to a 58% gallery and 42% configurator column ratio.
 - Ensured gallery images scale to the enlarged column without cropping and preserved mobile stacking.
+- Fixed GitHub update detection and added manual update check/cache controls in admin settings.
 
 ## 0.1.6
 

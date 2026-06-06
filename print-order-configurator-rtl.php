@@ -29,6 +29,7 @@ define( 'POC_RTL_BASENAME', plugin_basename( __FILE__ ) );
 
 define( 'POCRTL_VERSION', POC_RTL_VERSION );
 define( 'POCRTL_PLUGIN_FILE', __FILE__ );
+define( 'POCRTL_PLUGIN_BASENAME', POC_RTL_BASENAME );
 define( 'POCRTL_GITHUB_REPO', 'mido1983/print-order-configurator-rtl' );
 define( 'POCRTL_GITHUB_API_URL', 'https://api.github.com/repos/mido1983/print-order-configurator-rtl/releases/latest' );
 
