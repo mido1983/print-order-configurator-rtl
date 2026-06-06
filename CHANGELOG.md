@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.6
+
+- Added scoped active-product layout classes for PrintX product pages.
+- Fixed remaining narrow width constraints from the product action quantity host.
+- Matched configurator, quantity, and add-to-cart widths while keeping the product image visible.
+
 ## 0.1.5
 
 - Fixed PrintX product action flex wrapper layout so the configurator spans full width.

@@ -52,7 +52,7 @@
 
 	document.querySelectorAll('.poc-rtl-configurator').forEach(syncPanels);
 
-	document.querySelectorAll('.poc-rtl-configurator').forEach(function (configurator) {
+	function markConfiguratorLayout(configurator) {
 		var form = configurator.closest('form');
 
 		if (form) {
@@ -70,5 +70,35 @@
 				product.classList.add('pocrtl-product-layout');
 			}
 		}
-	});
+
+		document.body.classList.add('pocrtl-active-product');
+
+		var productColumn = configurator.closest('.col-xl-6, .col-lg-6, .summary, .entry-summary');
+		var actionQuantity = configurator.closest('.tp-product-details-quantity');
+		var actionWrapper = configurator.closest('.tp-product-details-action-wrapper');
+
+		if (productColumn) {
+			productColumn.classList.add('pocrtl-product-column');
+		}
+
+		if (actionQuantity) {
+			actionQuantity.classList.add('pocrtl-configurator-width-host');
+		}
+
+		if (actionWrapper) {
+			actionWrapper.classList.add('pocrtl-action-wrapper');
+		}
+	}
+
+	function markAllConfiguratorLayouts() {
+		document.querySelectorAll('.poc-rtl-configurator').forEach(markConfiguratorLayout);
+	}
+
+	markAllConfiguratorLayouts();
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', markAllConfiguratorLayouts);
+	} else {
+		window.setTimeout(markAllConfiguratorLayouts, 0);
+	}
 }());

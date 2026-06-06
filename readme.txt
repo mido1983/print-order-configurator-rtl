@@ -4,7 +4,7 @@ Tags: woocommerce, rtl, hebrew, print, uploads
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 0.1.5
+Stable tag: 0.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,6 +23,9 @@ This plugin is not a visual product designer and does not render print-ready art
 3. Activate this plugin.
 
 == Changelog ==
+
+= 0.1.6 =
+Fix remaining PrintX width constraints so the configurator, quantity, and add-to-cart controls use the full product action width.
 
 = 0.1.5 =
 Fix PrintX product action flex wrapper so the configurator uses full width and the add-to-cart button stays below it.
