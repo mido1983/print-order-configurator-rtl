@@ -79,6 +79,16 @@
 
 		if (productColumn) {
 			productColumn.classList.add('pocrtl-product-column');
+
+			var productRow = productColumn.parentElement;
+
+			if (productRow) {
+				productRow.querySelectorAll('.col-xl-6, .col-lg-6').forEach(function (column) {
+					if (column !== productColumn) {
+						column.classList.add('pocrtl-gallery-column');
+					}
+				});
+			}
 		}
 
 		if (actionQuantity) {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.7
+
+- Added a scoped gallery column marker for PrintX product rows.
+- Rebalanced desktop layout to a 58% gallery and 42% configurator column ratio.
+- Ensured gallery images scale to the enlarged column without cropping and preserved mobile stacking.
+
 ## 0.1.6
 
 - Added scoped active-product layout classes for PrintX product pages.
