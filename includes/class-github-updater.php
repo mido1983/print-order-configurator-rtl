@@ -205,9 +205,19 @@ final class POC_RTL_GitHub_Updater {
 
 		$source      = trailingslashit( (string) $result['destination'] );
 		$destination = trailingslashit( WP_PLUGIN_DIR ) . dirname( POCRTL_PLUGIN_BASENAME );
+		$main_file   = trailingslashit( $source ) . basename( POCRTL_PLUGIN_BASENAME );
+		$nested      = trailingslashit( $source ) . dirname( POCRTL_PLUGIN_BASENAME );
 
 		if ( trailingslashit( $destination ) === $source ) {
+			if ( ! $wp_filesystem->exists( $main_file ) && $wp_filesystem->exists( trailingslashit( $nested ) . basename( POCRTL_PLUGIN_BASENAME ) ) ) {
+				$result['destination'] = $nested;
+			}
+
 			return $response;
+		}
+
+		if ( ! $wp_filesystem->exists( $main_file ) && $wp_filesystem->exists( trailingslashit( $nested ) . basename( POCRTL_PLUGIN_BASENAME ) ) ) {
+			$source = trailingslashit( $nested );
 		}
 
 		if ( $wp_filesystem->exists( $destination ) ) {
@@ -340,7 +350,7 @@ final class POC_RTL_GitHub_Updater {
 					'http_status' => $http_status,
 					'raw_tag'     => (string) $data['tag_name'],
 					'version'     => $this->normalize_version( (string) $data['tag_name'] ),
-					'error'       => __( 'No ZIP package was found in the latest GitHub release.', 'print-order-configurator-rtl' ),
+					'error'       => __( 'Latest GitHub release does not contain print-order-configurator-rtl.zip. Automatic update cannot be installed safely.', 'print-order-configurator-rtl' ),
 					'checked_at'  => time(),
 				)
 			);
@@ -380,8 +390,6 @@ final class POC_RTL_GitHub_Updater {
 	 * @param array<string,mixed> $data Release data.
 	 */
 	private function release_package_url( array $data ): string {
-		$zip_assets = array();
-
 		if ( ! empty( $data['assets'] ) && is_array( $data['assets'] ) ) {
 			foreach ( $data['assets'] as $asset ) {
 				if ( ! is_array( $asset ) || empty( $asset['browser_download_url'] ) ) {
@@ -390,30 +398,13 @@ final class POC_RTL_GitHub_Updater {
 
 				$name = isset( $asset['name'] ) ? strtolower( (string) $asset['name'] ) : '';
 
-				if ( str_ends_with( $name, '.zip' ) ) {
-					$zip_assets[ $name ] = (string) $asset['browser_download_url'];
+				if ( self::SLUG . '.zip' === $name ) {
+					return (string) $asset['browser_download_url'];
 				}
 			}
 		}
 
-		if ( ! empty( $zip_assets ) ) {
-			$version = isset( $data['tag_name'] ) ? $this->normalize_version( (string) $data['tag_name'] ) : '';
-			$preferred = array(
-				self::SLUG . '.zip',
-				self::SLUG . '-' . $version . '.zip',
-				self::SLUG . '-v' . $version . '.zip',
-			);
-
-			foreach ( $preferred as $name ) {
-				if ( isset( $zip_assets[ $name ] ) ) {
-					return $zip_assets[ $name ];
-				}
-			}
-
-			return reset( $zip_assets ) ?: '';
-		}
-
-		return isset( $data['zipball_url'] ) ? (string) $data['zipball_url'] : '';
+		return '';
 	}
 
 	/**

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.9
+
+- Added a PowerShell build script for the correct `print-order-configurator-rtl.zip` package structure.
+- Changed the GitHub updater to require the safe release asset `print-order-configurator-rtl.zip` instead of GitHub source ZIP files.
+- Improved updater install-folder normalization and added admin warnings for unsafe release packages.
+- Added manual recovery instructions for wrong plugin folders and filesystem permission failures.
+
 ## 0.1.8
 
 - Added the remaining HOTFIX scoped frontend stabilization selectors.

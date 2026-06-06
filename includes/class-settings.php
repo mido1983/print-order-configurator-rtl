@@ -454,6 +454,16 @@ final class POC_RTL_Settings {
 			<th scope="row"><?php esc_html_e( 'Update status', 'print-order-configurator-rtl' ); ?></th>
 			<td><strong><?php echo esc_html( $this->github_update_status_label( $status, $current_version ) ); ?></strong></td>
 		</tr>
+		<?php if ( ! empty( $status['error'] ) && str_contains( (string) $status['error'], 'print-order-configurator-rtl.zip' ) ) : ?>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Update package warning', 'print-order-configurator-rtl' ); ?></th>
+				<td>
+					<p class="notice notice-error inline">
+						<?php esc_html_e( 'Latest GitHub release does not contain print-order-configurator-rtl.zip. Automatic update cannot be installed safely.', 'print-order-configurator-rtl' ); ?>
+					</p>
+				</td>
+			</tr>
+		<?php endif; ?>
 		<tr>
 			<th scope="row"><?php esc_html_e( 'Manual update actions', 'print-order-configurator-rtl' ); ?></th>
 			<td>
